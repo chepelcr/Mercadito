@@ -31,11 +31,10 @@
                     ?>
                 </div>
             </div>
-
-            <?php echo view('base/footer')?>
-
         </div>
     </div>
+
+    <?php echo view('base/footer')?>
 
     <?php
 

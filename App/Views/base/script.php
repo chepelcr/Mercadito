@@ -5,6 +5,11 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
 
+<!-- SweetAlert -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!-- Font-Awesome -->
+<script src="https://kit.fontawesome.com/3e7bda16db.js" crossorigin="anonymous"></script>
+
 <script src="<?=getFile('js/base.js')?>"></script>
 
 <?php

@@ -1,6 +1,6 @@
  <div class="card">
      <div class="card-header bg-dark text-white">
-         <h1 class="card-title">Mercadito Virtual del Trueque</h1>
+         <h1 class="card-title fs-4">Mercadito Virtual del Trueque</h1>
      </div>
 
      <div class="card-body bg-secondary">
@@ -13,7 +13,7 @@
                      </div>
 
                      <div class="card-body">
-                         <h5 class="card-title">"Nombre del puesto 1"</h5> <br>
+                         <h5 class="card-title fs-6">"Nombre del puesto 1"</h5> <br>
                          <button type="button" id="btn_informacion" value="1" class="btn btn-primary">Mas
                              informacion</button>
                      </div>
@@ -26,7 +26,7 @@
                              alt="Imagen del puesto o empresa">
                      </div>
                      <div class="card-body">
-                         <h5 class="card-title">"Nombre del puesto 2"</h5> <br>
+                         <h5 class="card-title fs-6">"Nombre del puesto 2"</h5> <br>
                          <button type="button" id="btn_informacion" value="1" class="btn btn-primary">Mas
                              informacion</button>
                      </div>
@@ -39,7 +39,7 @@
                              alt="Imagen del puesto o empresa">
                      </div>
                      <div class="card-body">
-                         <h5 class="card-title">"Nombre del puesto 3"</h5> <br>
+                         <h5 class="card-title fs-6">"Nombre del puesto 3"</h5> <br>
                          <button type="button" id="btn_informacion" value="1" class="btn btn-primary">Mas
                              informacion</button>
                      </div>
@@ -52,7 +52,7 @@
                              alt="Imagen del puesto o empresa">
                      </div>
                      <div class="card-body">
-                         <h5 class="card-title">"Nombre del puesto 4"</h5> <br>
+                         <h5 class="card-title fs-6">"Nombre del puesto 4"</h5> <br>
                          <button type="button" id="btn_informacion" value="1" class="btn btn-primary">Mas
                              informacion</button>
                      </div>

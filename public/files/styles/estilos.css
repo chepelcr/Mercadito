@@ -1,0 +1,27 @@
+.bg-mercadito-claro
+{
+    background-color: lightgreen;
+}
+
+.bg-mercadito-oscuro
+{
+    background-color: forestgreen;
+}
+
+.text-justify  { text-align: justify !important; }
+
+.img-div-center{
+    position: relative;
+  }
+  .img-centro-vert-hor{
+    width: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .img-centro-vertical{
+    display: table-cell;
+    vertical-align: middle;
+  }

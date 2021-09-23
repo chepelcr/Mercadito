@@ -32,7 +32,7 @@ function getFile($name = '')
 {
     if($name!='')
     {
-        return '../files/'.$name;
+        return baseUrl('files/'.$name);
     }
 
     return false;
@@ -40,7 +40,7 @@ function getFile($name = '')
 
 function getFilesFolder()
 {
-    return '../files/';
+    return 'files/';
 }//Fin de la fución para retornar la carpeta donde se encuentran almacenados los archivos de la aplicacion
 
 /**Obtener una variable desde una solicitud POST */

@@ -19,7 +19,7 @@ class Login extends BaseController
 
 			else
 			{
-				header('Location: '.baseUrl('punto'));
+				header('Location: '.baseUrl());
 			}//Fin del else
 		}//Fin de la funcion
 
