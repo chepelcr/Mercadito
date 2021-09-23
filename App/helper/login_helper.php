@@ -2,8 +2,7 @@
 	/** Validar si el usuario ha iniciado sesion */
     function is_login()
     {
-		//return getSession();
-		return true;
+		return getSession();
     }//Fin de la validacion para el login
 
 	/**Generar una contraseña aleatoriamente */

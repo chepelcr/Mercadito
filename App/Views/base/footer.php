@@ -14,7 +14,7 @@
                                 <div class="row">
                                     <div class="col-2 img-div-center">
                                         <img class="img-fluid w-50 img-centro-vert-hor"
-                                            src="<?=getFile('images/logo sin letras.png')?>" alt="logo">
+                                            src="<?= getFile('images/logo sin letras.png') ?>" alt="logo">
                                     </div>
 
                                     <div class="col-10">
@@ -40,26 +40,30 @@
             </section>
             <!-- Section: Links  -->
 
-            <div class="container">
-                <div class="row pt-2 p-2 text-white bg-mercadito-oscuro rounded">
+            <div class="container bg-mercadito-oscuro rounded text-white">
+                <div class="row pt-2">
                     <!-- Copyright -->
                     <div class="col-8">
-                        <p class="text-end pt-3">
-                            © 2021 Copyright:
-                            <a class="text-reset fw-bold" href="<?=baseUrl()?>">Feria del trueque: Verde
-                                Manantial</a>
-                        </p>
+                        <section class="pt-2">
+                            <p class="text-center">
+                                © 2021 Copyright:
+                                <a class="text-reset fw-bold" href="<?= baseUrl() ?>">Feria del trueque: Verde
+                                    Manantial</a>
+                            </p>
+                        </section>
                     </div>
 
                     <div class="col-4">
-                        <h6 class="text-uppercase text-end fw-bold pt-2">
-                            <a role="button" class="btn bg-mercadito-claro" href="<?=baseUrl('login')?>">Login</a>
-                        </h6>
+                        <div class="container">
+                            <h6 class="text-end fw-bold">
+                                <a role="button" class="btn bg-mercadito-claro" href="<?= baseUrl('login') ?>">Inicio de
+                                    sesión</a>
+                            </h6>
+                        </div>
                     </div>
                     <!-- Copyright -->
                 </div>
             </div>
-
         </footer>
     </div>
 </div>

@@ -65,7 +65,7 @@ class Login extends BaseController
 					$respuesta = 1;
 				}//Fin del if
 
-				return json_encode($respuesta);
+				return json_encode(1);
 			}//Fin de la validacion
 			
 			else

@@ -89,7 +89,7 @@ class Model
         }
         
         catch (Throwable $th) {
-            //throw $th;
+            echo $th->getMessage();
         }
 	}//Fin del constructor
 
