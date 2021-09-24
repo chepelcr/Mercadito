@@ -8,8 +8,8 @@
     <title>Mercadito del Trueque | Olvido</title>
 
     <!-- Bootstrap 5-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -33,37 +33,36 @@
 <body class="hold-transition login-page bg-mercadito-claro">
     <div class="login-box">
         <!-- /.login-logo -->
-        <div class="card card-outline card-dark">
-            <div class="card-header text-center bg-dark">
+        <div class="card card-dark">
+            <div class="card-header text-center">
                 <img src="<?= getFile('images/logo feria.png')?>" class="w-25">
             </div>
 
-            <div class="card-body bg-secondary">
-                <form id="frmRecuperar" method="post">
+            <form id="frmRecuperar" method="post">
+                <div class="card-body bg-secondary">
                     <p class="login-box-msg"><b>Recuperar contraseña</b></p>
-                    <div class="input-group mb-3">
-                        <input type="email" class="form-control" placeholder="Correo electronico" name="correo">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="user" name="user" placeholder="correo@example.com">
+                        <label class="text-black" for="user">Correo electronico</label>
                     </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer bg-mercadito-oscuro">
                     <div class="row">
                         <div class="col-3 text-center">
-                            <button data-bs-toggle="tooltip" data-bs-placement="bottom" title="Volver" class="btn btn-dark" type="button"
-                                onclick="location.href='<?= baseUrl('login')?>'"><i
-                                    class="fas fa-arrow-left"></i></button>
+                            <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Volver" class="btn btn-dark"
+                                role="button" href="<?= baseUrl('login')?>"><i class="fas fa-arrow-left"></i></a>
                         </div>
                         <!-- /.col -->
                         <div class="col-9">
-                            <button type="submit" class="fw-bold btn btn-primary btn-warning w-100">Realizar solititud</button>
+                            <button type="submit" class="fw-bold btn btn-azul-oscuro w-100">Realizar
+                                solicitud</button>
                         </div>
                         <!-- /.col -->
                     </div>
-                </form>
-            </div>
-            <!-- /.card-body -->
+                </div>
+            </form>
         </div>
         <!-- /.card -->
     </div>

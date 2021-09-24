@@ -8,6 +8,19 @@
     background-color: forestgreen;
 }
 
+.bg-azul-mercadito
+{
+  background-color: #156ed4;
+}
+
+.btn-azul-oscuro{
+  background-color: #156ed4;
+  text-align: center;
+  text-transform: uppercase;
+  color: antiquewhite;
+  width: 100%;
+}
+
 .text-justify  { text-align: justify !important; }
 
 .img-div-center{

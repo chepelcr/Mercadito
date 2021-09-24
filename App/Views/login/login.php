@@ -32,11 +32,12 @@
 
 <body class="hold-transition login-page bg-mercadito-claro">
     <div class="login-box">
-        <!-- /.login-logo -->
-        <div class="card card-outline card-dark">
-            <div class="card-header text-center bg-dark">
+        <div class="card card-dark">
+            <!-- login-logo -->
+            <div class="card-header text-center">
                 <img src="<?= getFile('images/logo feria.png')?>" class="w-25">
             </div>
+            <!-- /login-logo -->
 
             <div class="card-body bg-secondary">
                 <p class="card-text pl-0 login-box-msg text-center"><b>Inicio de sesión</b></p>
@@ -46,18 +47,13 @@
                         <label for="user">Correo electronico</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="pswd" name="pswd" placeholder="Password">
+                        <input type="password" class="form-control" id="pswd" name="pswd" placeholder="**********">
                         <label for="pswd">Contraseña</label>
                     </div>
 
-                    <div class="row justify-content-end">
-                        <div class="col-3 text-center">
-                            <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Volver" class="btn btn-dark"
-                                role="button" href="<?= baseUrl()?>"><i class="fas fa-arrow-left"></i></button></a>
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-9">
-                            <button type="submit" class="fw-bold btn btn-primary btn-warning w-100">Entrar</button>
+                    <div class="row justify-content-center">
+                        <div class="col-8">
+                            <button type="submit" class="fw-bold btn btn-azul-oscuro">Entrar</button>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -65,11 +61,17 @@
             </div>
             <!-- /.card-body -->
 
-            <div class="card card-footer bg-mercadito-oscuro">
+            <div class="card-footer bg-mercadito-oscuro">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-3 text-center">
+                        <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Volver" class="btn btn-dark"
+                            role="button" href="<?= baseUrl()?>"><i class="fas fa-arrow-left"></i></button></a>
+                    </div>
+                    <!-- /.col -->
+
+                    <div class="col-9">
                         <a role="button" href="<?= baseUrl('login/olvido')?>"
-                            class="btn btn-info btn-block fw-bold">Olvidé mi
+                            class="btn btn-warning btn-block fw-bold">Olvidé mi
                             contraseña</a>
 
                     </div>
