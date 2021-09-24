@@ -8,8 +8,8 @@
     <title>Mercadito del Trueque | Login</title>
 
     <!-- Bootstrap 5-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -40,27 +40,23 @@
 
             <div class="card-body bg-secondary">
                 <p class="card-text pl-0 login-box-msg text-center"><b>Inicio de sesión</b></p>
-                <form id="frmLogin" method="post">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Correo electronico" name="usuario">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
+                <form id="frmLogin" class="text-black" method="post">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="user" name="user" placeholder="correo@example.com">
+                        <label for="user">Correo electronico</label>
                     </div>
-                    <div class="input-group mb-3">
-                        <input type="password" class="form-control" placeholder="Contraseña" name="contrasenia">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="pswd" name="pswd" placeholder="Password">
+                        <label for="pswd">Contraseña</label>
                     </div>
 
                     <div class="row justify-content-end">
+                        <div class="col-3 text-center">
+                            <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Volver" class="btn btn-dark"
+                                role="button" href="<?= baseUrl()?>"><i class="fas fa-arrow-left"></i></button></a>
+                        </div>
                         <!-- /.col -->
-                        <div class="col-md-12">
+                        <div class="col-9">
                             <button type="submit" class="fw-bold btn btn-primary btn-warning w-100">Entrar</button>
                         </div>
                         <!-- /.col -->
@@ -71,13 +67,9 @@
 
             <div class="card card-footer bg-mercadito-oscuro">
                 <div class="row">
-                    <div class="col-3 text-center">
-                        <a class="btn btn-dark" role="button" href="<?= baseUrl()?>"><i
-                                class="fas fa-arrow-left"></i></button></a>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-9">
-                        <a role="button" href="<?= baseUrl('login/olvido')?>" class="btn btn-info btn-block fw-bold">Olvidé mi
+                    <div class="col-12">
+                        <a role="button" href="<?= baseUrl('login/olvido')?>"
+                            class="btn btn-info btn-block fw-bold">Olvidé mi
                             contraseña</a>
 
                     </div>
@@ -93,8 +85,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js"
         integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous">
     </script>
 
     <!-- SweetAlert -->
@@ -106,6 +99,11 @@
 
     <script type="text/javascript">
     var base = "http://localhost/universidad/tcu/mercadito/Mercadito/public/";
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
 
 
     $("#frmLogin").on('submit', function(e) {
