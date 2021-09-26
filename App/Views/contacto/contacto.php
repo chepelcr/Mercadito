@@ -1,12 +1,12 @@
 <div class="row row-cols-1 row-cols-md-1 g-4">
     <div class="col-md-7">
-        <div class="card rounded bg-secondary text-white">
+        <div class="card rounded bg-transparent text-white">
             <div class="card-header bg-dark">
                 <h1 class="card-title fs-4">Dejanos tus comentarios</h1>
             </div>
 
             <form id="frm_contacto">
-                <div class="card-body text-dark">
+                <div class="card-body bg-secondary text-dark">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Juan Trueque">
                         <label for="nombre">Nombre Completo</label>
@@ -42,12 +42,12 @@
     </div>
 
     <div class="col-md-5">
-        <div class="card text-white bg-secondary rounded h-100">
+        <div class="card text-white bg-transparent rounded h-100">
             <div class="card-header text-center bg-dark">
                 <h3 class="card-title fs-4">Encuentranos</h3>
             </div>
 
-            <div class="card-body">
+            <div class="card-body bg-secondary">
                 <div class="row">
                     <div class="col-md-12">
                         <article>

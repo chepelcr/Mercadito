@@ -10,7 +10,7 @@
                         <!-- Grid column -->
                         <div class="col-md-12 col-lg-12 col-xl-12 mx-auto">
                             <!-- Content -->
-                            <h6 class="">
+                            <h6 class="p-2">
                                 <div class="row">
                                     <div class="col-2 img-div-center">
                                         <img class="img-fluid w-50 img-centro-vert-hor"
@@ -45,8 +45,8 @@
                     <!-- Copyright -->
                     <div class="col-8">
                         <section class="pt-2">
-                            <p class="text-center">
-                                © 2021 Copyright:
+                            <p class="text-left">
+                                © 2021 Derechos reservados:
                                 <a class="text-reset fw-bold" href="<?= baseUrl() ?>">Feria del trueque: Verde
                                     Manantial</a>
                             </p>
@@ -56,7 +56,7 @@
                     <div class="col-4">
                         <div class="container">
                             <h6 class="text-end fw-bold">
-                                <a role="button" class="btn bg-mercadito-claro" href="<?= baseUrl('login') ?>">Inicio de
+                                <a role="button" class="btn bg-mercadito-claro" href="<?= baseUrl('login') ?>">Iniciar
                                     sesión</a>
                             </h6>
                         </div>

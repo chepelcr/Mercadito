@@ -53,7 +53,7 @@
 
                     <div class="row justify-content-center">
                         <div class="col-8">
-                            <button type="submit" class="fw-bold btn btn-azul-oscuro">Entrar</button>
+                            <button type="submit" class="fw-bold btn btn-warning w-100">Entrar</button>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -71,7 +71,7 @@
 
                     <div class="col-9">
                         <a role="button" href="<?= baseUrl('login/olvido')?>"
-                            class="btn btn-warning btn-block fw-bold">Olvidé mi
+                            class="btn btn-azul-oscuro btn-block fw-bold">Olvidé mi
                             contraseña</a>
 
                     </div>

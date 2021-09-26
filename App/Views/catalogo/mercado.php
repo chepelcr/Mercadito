@@ -1,5 +1,5 @@
-<div class="card">
-    <div class="card-header bg-dark text-white">
+<div class="card bg-transparent">
+    <div class="card-header text-white bg-dark">
         <h1 class="card-title fs-4">Mercadito Virtual del Trueque</h1>
     </div>
 
@@ -109,10 +109,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="row row-cols-1 row-cols-md-4 g-4">
                         <div class="col">
-                            <div class="card h-100">
-                                <div class="text-center">
+                            <div class="card h-100 text-center">
+                                <div class="card-header">
                                     <img src="<?= getFile('images/logo feria.png') ?>" class="card-img-top w-75 p-1"
                                         alt="Imagen del producto">
                                 </div>
@@ -120,43 +120,37 @@
                                     <h5 class="card-title">Nombre del producto</h5>
                                     <p class="card-text">Descripcion.</p>
                                 </div>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">Valor: $0000</li>
-                                </ul>
-                                <div class="card-body">
+                                <div class="card-footer">
                                     <a target="_blank"
                                         href="https://wa.me/50670391069/?text=Me interesa el producto que estás truequeando"
-                                        class="btn btn-outline-success">Soliciar Informacion por
+                                        class="btn btn-outline-success">Solicitar por
                                         WhatsApp</a>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col">
-                            <div class="card h-100">
-                                <div class="text-center">
+                            <div class="card h-100 text-center">
+                                <div class="card-header">
                                     <img src="<?= getFile('images/logo feria.png') ?>" class="card-img-top w-75 p-1"
                                         alt="...">
                                 </div>
-                                <div class="card-body text-center">
+                                <div class="card-body">
                                     <h5 class="card-title">Nombre del producto</h5>
                                     <p class="card-text">Descripcion.</p>
                                 </div>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">Valor: $0000</li>
-                                </ul>
-                                <div class="card-body">
+                                <div class="card-footer">
                                     <a target="_blank"
                                         href="https://wa.me/50670391069/?text=Me interesa el producto que estás truequeando"
-                                        class="btn btn-outline-success">Soliciar Informacion por
+                                        class="btn btn-outline-success">Solicitar por
                                         WhatsApp</a>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col">
-                            <div class="card h-100">
-                                <div class="text-center">
+                            <div class="card h-100 text-center">
+                                <div class="card-header">
                                     <img src="<?= getFile('images/logo feria.png') ?>" class="card-img-top w-75 p-1"
                                         alt="...">
                                 </div>
@@ -164,34 +158,29 @@
                                     <h5 class="card-title">Nombre del producto</h5>
                                     <p class="card-text">Descripcion.</p>
                                 </div>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">Valor: $0000</li>
-                                </ul>
-                                <div class="card-body">
+                                <div class="card-footer">
                                     <a target="_blank"
                                         href="https://wa.me/50670391069/?text=Me interesa el producto que estás truequeando"
-                                        class="btn btn-outline-success">Soliciar Informacion por
+                                        class="btn btn-outline-success">Solicitar por
                                         WhatsApp</a>
                                 </div>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="card h-100">
-                                <div class="text-center">
+                            <div class="card h-100 text-center">
+                                <div class="card-header">
                                     <img src="<?= getFile('images/logo feria.png') ?>" class="card-img-top w-75 p-1"
                                         alt="...">
                                 </div>
-                                <div class="card-body text-center">
+                                <div class="card-body">
                                     <h5 class="card-title">Nombre del producto</h5>
                                     <p class="card-text">Descripcion.</p>
                                 </div>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">Valor: $0000</li>
-                                </ul>
-                                <div class="card-body">
+
+                                <div class="card-footer">
                                     <a target="_blank"
                                         href="https://wa.me/50670391069/?text=Me interesa el producto que estás truequeando"
-                                        class="btn btn-outline-success">Soliciar Informacion por
+                                        class="btn btn-outline-success">Solicitar por
                                         WhatsApp</a>
                                 </div>
                             </div>
