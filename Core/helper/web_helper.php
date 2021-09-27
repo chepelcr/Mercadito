@@ -1,7 +1,5 @@
 <?php
 
-use Core\Auditorias\Auditorias;
-
 /**Retornar la direccion web de la aplicacion */
 function baseUrl($ext = false)
 {
@@ -12,18 +10,6 @@ function baseUrl($ext = false)
 
     return getEnt('app.URL');
 }//Fin de la funcion
-
-function insertError($data)
-{
-    $auditorias = new Auditorias();
-    $auditorias->insertError($data);
-}//Fin de la funcion
-
-function insertAuditoria($data)
-    {
-        $auditorias = new Auditorias();
-        $auditorias->insertAuditoria($data);
-    }//Fin de la funcion
 
 /**Obtener un segmento de la url */
 function getSegment($num = 0)

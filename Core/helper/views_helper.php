@@ -1,6 +1,4 @@
 <?php
-
-use Core\Config\Response;
 use PHPBook\View as View;
 
 View\Configuration\View::setViewsPathRoot('main', '../App/Views');

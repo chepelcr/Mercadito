@@ -1,13 +1,18 @@
 <?php
     namespace Core;
-
-    require_once('../Core/helper/session.php');
-    require_once('../Core/helper/encriptar.php');
-    require_once('../Core/helper/views.php');
     
     class Controller
     {
-        /** Ayudadores para el controlador */
+        /** Archivos de ayuda creados por el usuario */
         protected $helpers = [];
+
+        /**Archivos de ayuda predeterminados */
+        private $base_helpers = ['auditorias', 'views', 'session'];
+
+        public function __construct()
+        {
+            load_helpers($this->base_helpers);
+            load_helpers($this->helpers, 'App');
+        }//Fin del constructor
         
     }//Fin de la clase

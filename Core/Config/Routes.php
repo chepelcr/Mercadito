@@ -1,8 +1,5 @@
 <?php
 
-require_once '../vendor/autoload.php';
-
-
 use Core\Config\Controllers;
 
 /**Clase para manejar el routeo del controlador y acciones */
@@ -10,6 +7,18 @@ class Routes
 {
 	private $default_controller = '';
 	private $default_action = '';
+
+	public function __construct()
+	{
+		$this->init_load();
+	}
+
+	/**Carga inicial de la aplicacion */
+	private function init_load()
+	{
+		require_once '../vendor/autoload.php';
+		require_once '../Core/helper/load_helper.php';
+	}//Fin de la funcion
 
 	public function setDefault($controller, $action)
 	{

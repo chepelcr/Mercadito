@@ -1,13 +1,12 @@
 <?php
     namespace Core\Config;
 
-    require_once('../Core/helper/Entorno.php');
-    include_once '../Core/helper/base.php';
-
     class Controllers
     {
-        function __construct($default_controller, $default_action)
+        public function __construct($default_controller, $default_action)
         {
+            load_helpers(['entorno','web']);
+
             $this->default_controller = $default_controller;
             $this->default_action = $default_action;
         }//Fin del constructor
