@@ -1,12 +1,16 @@
 <?php
 
 use Core\Config\Controllers;
+use Core\Controller;
 
 /**Clase para manejar el routeo del controlador y acciones */
 class Routes
 {
-	private $default_controller = '';
-	private $default_action = '';
+	private $default_controller = 'Inicio';
+	private $default_action = 'index';
+
+	protected $estado = 200;
+	protected Controller $controller;
 
 	public function __construct()
 	{
@@ -28,14 +32,20 @@ class Routes
 		return $this;
 	}//Fin del metodo para establecer el controlador y funcion por defecto
 
-	/**función que llama al controlador y su respectiva acción, que son pasados como parámetros */
-	private function call( $controller, $action )
+	/**Obtener un controlador de la aplicacion */
+	private function getController($controllerName)
 	{
+		$controllerName = "App\\Controllers\\".$controllerName;
+		$this->controller = new $controllerName();
 
-		$controller = "App\\Controllers\\".$controller;
+		return $this->controller;
+	}//Fin del metodo
 
-		//crea el controlador
-		$controller = new $controller();
+	/**función que llama al controlador y su respectiva acción, que son pasados como parámetros */
+	private function call( $controllerName, $action )
+	{
+		/**Obtener un controlador */
+		$controller = $this->getController($controllerName);
 
 		/**Validar el tipo de solicitud que entra a la aplicacion */
 		switch($action)
@@ -44,30 +54,102 @@ class Routes
 			case 'guardar':
 				/**Si la solicitud contiene datos */
 				if(post())
-					echo $controller->guardar();
+				{
+					if (getSegment(3))
+						echo $controller->guardar(getSegment(3));
+
+					/**Realizar la accion por defecto del metodo */
+					else
+						echo $controller->guardar();
+				}//Fin de la validacion de la solicitud
 
 				else
 					header('Location: '.baseUrl(getSegment(1)));
 			break;
 			
+			//Obtener una fila especifica del objeto solicitado  
+			//http://localhost/controlador/update/id/objeto
 			case 'update':
 				if(post())
-					echo $controller->update();
+				{
+					if(getSegment(3)&&getSegment(4))
+						echo $controller->update(getSegment(3), getSegment(4));
+
+					/**Realizar la accion por defecto del metodo */
+					elseif (getSegment(3))
+						echo $controller->update(getSegment(3));
+				}//Fin de la validacion de la solicitud
 
 				else
 					header('Location: '.baseUrl(getSegment(1)));
+			break;
+
+			//Activar un objeto especifico
+			//http://localhost/controlador/activar/id/objeto
+			case 'activar':
+				if(getSegment(3)&&getSegment(4))
+					echo $controller->activar(getSegment(3), getSegment(4));
+
+				/**Realizar la accion por defecto del metodo */
+				elseif (getSegment(3))
+					echo $controller->activar(getSegment(3));
+
+				else
+					echo $controller->activar();
+			break;
+
+			//Desactivar un objeto especifico
+			//http://localhost/controlador/desactivar/id/objeto
+			case 'desactivar':
+				if(getSegment(3)&&getSegment(4))
+					echo $controller->desactivar(getSegment(3), getSegment(4));
+
+				/**Realizar la accion por defecto del metodo */
+				elseif (getSegment(3))
+					echo $controller->desactivar(getSegment(3));
+
+				else
+					echo $controller->desactivar();
 			break;
 
 			case 'obtener':
-				if(getSegment(3))
+				/**Obtener una fila especifica del objeto solicitado 
+				 * 
+				 * http://localhost/controlador/obtener/id/objeto
+				*/
+				if(getSegment(3)&&getSegment(4))
+					echo $controller->obtener(getSegment(3), getSegment(4));
+
+				/**Obtener todos los registros del modulo solicitado 
+				 * 
+				 * http://localhost/controlador/obtener/all
+				*/
+				elseif (getSegment(3))
 					echo $controller->obtener(getSegment(3));
 
+				/**Realizar la accion por defecto del metodo */
 				else
-					header('Location: '.baseUrl(getSegment(1)));
+					echo $controller->obtener();
 			break;
 
-			case 'index':
-				echo $controller->index();
+			case 'validar':
+				/**Validar si un campo una fila especifica del objeto solicitado 
+				 * 
+				 * http://localhost/controlador/validar/id/objeto
+				*/
+				if(getSegment(3)&&getSegment(4))
+					echo $controller->validar(getSegment(3), getSegment(4));
+
+				/**Obtener todos los registros del modulo solicitado 
+				 * 
+				 * http://localhost/controlador/obtener/all
+				*/
+				elseif (getSegment(3))
+					echo $controller->validar(getSegment(3));
+
+				/**Realizar la accion por defecto del metodo */
+				else
+					echo $controller->validar();
 			break;
 				
 			default:
@@ -87,26 +169,76 @@ class Routes
 		$controller = $controllers->controller();
 		$action = $controllers->accion();
 
-		//Poner la primera letra en mayuscula
-		$controller = ucfirst($controller);
+		if($controller!='error')
+		{
+			//Poner la primera letra en mayuscula
+			$controller = ucfirst($controller);
 
-		$lista_controller = $controllers->listar_metodos($controller);
+			$lista_controller = $controllers->listar_metodos($controller);
 
-		//verifica que el controlador obtenido desde la url esté dentro del arreglo controllers
-		if ( array_key_exists( $controller, $lista_controller ) ) {
-			//verifica que el arreglo controllers con la clave que es la variable controller del index exista la acción
-			if (in_array($action, $lista_controller[$controller]) ) {
-				//llama  la función call y le pasa el controlador a llamar y la acción (método) que está dentro del controlador
-				$this->call( $controller, $action );
-			}else{
-				header('Location: '.baseUrl(getSegment(1)));
+			//verifica que el controlador obtenido desde la url esté dentro del arreglo controllers
+			if (array_key_exists($controller, $lista_controller))
+			{
+				//verifica que el arreglo controllers con la clave que es la variable controller del index exista la acción
+				if (in_array($action, $lista_controller[$controller]))
+				{
+					//llama  la función call y le pasa el controlador a llamar y la acción (método) que está dentro del controlador
+					$this->call( $controller, $action );
+				}
+
+				else
+				{
+					$this->estado = 404;
+					$mensaje = 'La pagina solicitada no esta disponible';
+					
+					$error = $this->data_error($mensaje);
+				
+					echo $this->error($controllers->getDefaultController(), $error);
+				}//Fin del else
 			}
-		}
 
-		else{
-			// le pasa el nombre del controlador y la pagina de error
-			$this->call ( $controllers->getDefaultController(), 'error');
+			else
+			{
+				$this->estado = 404;
+				$mensaje = 'La pagina solicitada no esta disponible';
+
+				$error = $this->data_error($mensaje);
+			
+				echo $this->error($controllers->getDefaultController(), $error);
+			}//Fin de la validacion
+		}//Fin de la validacion
+
+		//Si el controlador es error
+		else
+		{
+			$this->estado = 404;
+			$mensaje = 'Se ha generado un error';
+
+			$error = $this->data_error($mensaje);
+			
+			echo $this->error($controllers->getDefaultController(), $error);
 		}
-	}//Fin de la fucion
+	}//Fin de la funcion
+
+	private function data_error($mensaje)
+        {
+            $error = array(
+                'codigo'=>$this->estado,
+                'mensaje'=>$mensaje
+            );
+
+            $data = json_encode($error);
+
+            return json_decode($data);
+        }//Fin de la funcion
+
+	/**Mostrar la p[agina por defecto de la aplicacion */
+	public function error($controller, $error)
+	{
+		//crea el controlador
+		$controller = $this->getController($controller);
+
+		return $controller->error($error);
+	}//Fin de la funcion para mostrar la pagina de error por defecto de la aplicacion
 }//Fin de la clase
 ?>

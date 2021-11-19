@@ -3,6 +3,11 @@
     background-color: lightgreen;
 }
 
+.modal .modal-body {    
+  overflow-y: auto;
+  max-height: 350px;
+}
+
 .bg-mercadito-oscuro
 {
     background-color: forestgreen;
@@ -19,6 +24,14 @@
   text-transform: uppercase;
   color: antiquewhite;
   width: 100%;
+}
+
+.w-30{
+  width: 30%;
+}
+
+.h-95{
+  height: 90%;
 }
 
 .text-justify  { text-align: justify !important; }

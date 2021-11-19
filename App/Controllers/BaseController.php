@@ -2,20 +2,10 @@
     
 namespace App\Controllers;
 
-require_once('../App/helper/login_helper.php');
-
 use Core\Controller;
+use Core\Model;
 
 class BaseController extends Controller
 {
-    public function error()
-    {
-        $nombreVista = 'error/error';
-
-        $data = array(
-            'nombreVista'=>$nombreVista,
-        );
-
-        return view('layout', $data);
-    }//Fin de la funcion error
+    protected $helpers = ['login', 'modulos'];
 }//Fin de la clase

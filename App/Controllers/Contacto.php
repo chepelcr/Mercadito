@@ -13,24 +13,17 @@ class Contacto extends BaseController
 		{
 			$nombreVista = 'contacto/contacto';
 
+			$dataHead = array(
+				'titulo' => 'Contacto',
+			);
+
 			$data = array(
 				'nombreVista' => $nombreVista,
+				'dataHead' => $dataHead,
 			);
 
 			return view('layout', $data);
 		}//Fin de la funcion
-
-		/** Funcion para consultar si el usuario existe en la base de datos */
-		public function inscripciones()
-		{
-			$nombreVista = 'contacto/inscripciones';
-
-			$data = array(
-				'nombreVista' => $nombreVista,
-			);
-
-			return view('layout', $data);
-		}//Fin de la funcion para consultar un usuario
 
 		/**Registrar un nuevo usuario en el sistema */
 		public function quienes_somos()

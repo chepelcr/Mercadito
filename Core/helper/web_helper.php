@@ -1,5 +1,7 @@
 <?php
 
+use Core\Config\Header;
+
 /**Retornar la direccion web de la aplicacion */
 function baseUrl($ext = false)
 {
@@ -37,4 +39,10 @@ function getSegment($num = 0)
         return $uriSegments[$baseSegments+$num];
 
     return false;
+}
+
+/**Redireccionar a una direccion web */
+function redirect($url)
+{
+    Header::redirect($url);
 }

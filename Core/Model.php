@@ -78,6 +78,12 @@ class Model
 
     /**Utilizar auditorias */
     protected $auditorias = false;
+
+    /**Nombre del grupo que usará el modelo para conectarse a la base de datos */
+    protected $dbGroup = '';
+
+    /**Error generado en el modelo */
+    protected $error = array();
  
 	//constructor de la clase
 	function __construct()
@@ -85,13 +91,24 @@ class Model
         //Intentar conexion a la base de datos
 		try
         {
-            $this->db = Conexion::getConnect();
+            if($this->dbGroup!='')
+                $this->db = Conexion::getConnect($this->dbGroup);
+
+            else
+                $this->db = Conexion::getConnect();
         }
         
         catch (Throwable $th) {
             echo $th->getMessage();
         }
 	}//Fin del constructor
+
+    /**Establecer el nombre de una vista en el modelo */
+    public function vista($nombreVista)
+    {
+        $this->vistaTabla = $nombreVista;
+        return $this;
+    }//Fin de la funcion
 
     /**Setear los campos del update */
     private function setCamposUpdate($data)
@@ -127,9 +144,17 @@ class Model
             'controlador'=>$this->nombreTabla,
             'id_usuario'=>$id_usuario
         );
+
+        $this->error = $data;
         
         insertError($data);
     }//Fin de la funcion
+
+    /**Obtener el error generado en el modelo */
+    public function getError()
+    {
+        return json_decode(json_encode($this->error));
+    }
 
     /**Actualizar un registro en la base de datos */
     public function update($data, $id=null)
@@ -168,6 +193,7 @@ class Model
                 $data = array(
                     'id_fila'=> $id,
                     'tabla'=>$this->nombreTabla,
+                    'accion'=>'UPDATE',
                     'id_usuario'=>$id_usuario
                 );
 
@@ -712,6 +738,7 @@ class Model
                         $audit = array(
                             'id_fila'=> $data[$this->pk_tabla],
                             'tabla'=>$this->nombreTabla,
+                            'accion' => 'INSERT',
                             'id_usuario'=>$id_usuario
                         );
 
@@ -893,6 +920,7 @@ class Model
                         $data = array(
                             'id_fila'=> $id,
                             'tabla'=>$this->nombreTabla,
+                            'accion' => 'DELETE',
                             'id_usuario'=>$id_usuario
                         );
     

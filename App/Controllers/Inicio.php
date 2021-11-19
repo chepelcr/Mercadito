@@ -1,21 +1,28 @@
-<?php
+<?php 
+	/**
+	* Descripción: Controlador para la entidad Rol
+	*/
 
 namespace App\Controllers;
 
-/** Clase para iniciar sesion en la aplicacion */
+use App\Models\PuntosVentaModel;
+
 class Inicio extends BaseController
 	{
-		/** Funcion para mostrar el login */
+		/** Devolver el inicio de la pagina web */
 		public function index()
 		{
 			$nombreVista = 'inicio/index';
 
+			$script = '<!-- Documentos -->
+			<script src="'.getFile('dist/js/inicio.js').'"></script>';
+
 			$data = array(
-				'nombreVista' => $nombreVista,
+				'nombreVista'=>$nombreVista,
+				'script'=>$script
 			);
-
+	
 			return view('layout', $data);
-		}//Fin de la funcion
-	}//Fin del controlador de login
-
+		}//Fin de la funcion index
+	}//Fin de la clase
 ?>

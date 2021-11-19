@@ -11,19 +11,21 @@
 
 		private function __clone(){}
 		
-		public static function getConnect(){
-			if (!isset(self::$instance)) {
-				$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+		public static function getConnect($dbGroup = 'default'){
+			$pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+	
+			$host = getEnt('database.'.$dbGroup.'.host');
+			$database = getEnt('database.'.$dbGroup.'.name');
+	
+			$user = getEnt('database.'.$dbGroup.'.user');
+			$pswd = getEnt('database.'.$dbGroup.'.pswd');
+			
+			if (!isset(self::$instance[$dbGroup])) {
+				self::$instance[$dbGroup] = new PDO('mysql:host='.$host.';dbname='.$database, $user, $pswd, $pdo_options);
+			}//Fin de validacion de instancia de conexion
 
-				$host = getEnt('database.default.host');
-				$database = getEnt('database.default.name');
-
-				$user = getEnt("database.default.user");
-				$pswd = getEnt('database.default.pswd');
-
-				self::$instance= new PDO('mysql:host='.$host.';dbname='.$database,$user,$pswd,$pdo_options);
-			}
-			return self::$instance;
-		}
+			//Retornar la instancia de conexion
+			return self::$instance[$dbGroup];
+		}//Fin de getConnect
 	}
 ?>

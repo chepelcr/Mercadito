@@ -138,8 +138,10 @@ class Correo
                 );
 
                 insertAuditoria($data);
-            }
-        }
+
+                return true;
+            }//Fin de validacion de envio
+        }//Fin de intento de envio
         
         catch (Exception $ex)
 
@@ -150,7 +152,7 @@ class Correo
                 $id_usuario = 0;
                     
             $code = $ex->getCode();
-            $message = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            $message = "Su mensaje no se ha enviado: {$mail->ErrorInfo}";
             $file = $ex->getFile();
             $line = $ex->getLine();
 
@@ -163,8 +165,8 @@ class Correo
             );
             
             insertError($data);
-        }
 
-        return false;
+            return false;
+        }//Fin de la excepcion
     }//Fin de la funcion para enviar un correo
 }//Fin de la clase

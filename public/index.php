@@ -4,15 +4,10 @@
 
 require_once '../Core/Config/Routes.php';
 
-$default_controller = 'Inicio';
-$default_action = 'index';
-
 /**Crear instancia de la clase rutas */
-$routes = new Routes();
-
-$routes->setDefault($default_controller, $default_action);
+$app = new Routes();
 
 /**Realizar una solicitud a la aplicacion */
-$routes->llamar();
+$app->llamar();
 
 ?>

@@ -6,12 +6,28 @@
     integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous">
 </script>
 
+<!-- overlayScrollbars -->
+<script src="<?=getFile('dist/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')?>"></script>
+<!-- AdminLTE App -->
+<script src="<?=getFile('dist/js/adminlte.min.js')?>"></script>
+
 <!-- SweetAlert -->
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <!-- Font-Awesome -->
 <script src="https://kit.fontawesome.com/3e7bda16db.js" crossorigin="anonymous"></script>
 
-<script src="<?=getFile('js/base.js')?>"></script>
+<!-- Pace -->
+<script src="<?=getFile('dist/plugins/pace-progress/pace.min.js')?>"></script>
+
+<!-- Cleave-->
+<script src="<?=getFile('dist/plugins/cleave.js/dist/cleave.min.js')?>"></script>
+
+<!-- Cleave phone-->
+<script src="https://nosir.github.io/cleave.js/dist/cleave-phone.i18n.js"></script>
+
+<!-- Script base-->
+<script src="<?=getFile('dist/js/base/base.js')?>"></script>
 
 <?php
     if(isset($script))

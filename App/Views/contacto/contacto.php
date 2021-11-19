@@ -1,30 +1,30 @@
 <div class="row row-cols-1 row-cols-md-1 g-4">
     <div class="col-md-7">
-        <div class="card rounded bg-transparent text-white">
-            <div class="card-header bg-dark">
+        <div class="card card-dark">
+            <div class="card-header">
                 <h1 class="card-title fs-4">Dejanos tus comentarios</h1>
             </div>
 
             <form id="frm_contacto">
-                <div class="card-body bg-secondary text-dark">
-                    <div class="form-floating mb-3">
+                <div class="card-body bg-secondary">
+                    <div class="form-floating mb-3 text-black">
                         <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Juan Trueque">
                         <label for="nombre">Nombre Completo</label>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="form-floating mb-3 text-black">
                         <input type="text" class="form-control" id="telefono" name="telefono" placeholder="89743214">
                         <label for="telefono">Telefono de contacto</label>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="form-floating mb-3 text-black">
                         <input type="email" class="form-control" id="correo" name="correo"
                             placeholder="name@example.com">
                         <label for="correo">Correo Electronico</label>
                     </div>
 
-                    <div class="form-floating">
-                        <textarea class="form-control" placeholder="Dejanos tus comentarios!" name="comentarios"
+                    <div class="form-floating text-black">
+                        <textarea class="form-control" rows="2" placeholder="Dejanos tus comentarios!" name="comentarios"
                             id="comentarios"></textarea>
                         <label for="comentarios">Deja tus comentarios!</label>
                     </div>
@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <div class="col-md-5">
+    <div class="col-md-5 pb-3">
         <div class="card text-white bg-transparent rounded h-100">
             <div class="card-header text-center bg-dark">
                 <h3 class="card-title fs-4">Encuentranos</h3>
