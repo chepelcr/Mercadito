@@ -13,9 +13,8 @@
                 echo view('seguridad/usuario/informacion_personal', $perfil);
 
                 echo view('seguridad/usuario/panel_contacto', $perfil);
-
-                if(!is_admin())
-                    echo view('base/provincias', $perfil->ubicacion);
+                
+                echo view('base/provincias', $perfil->ubicacion);
             ?>
         </div>
 
@@ -33,9 +32,6 @@
 
             <div id="panel_perfil" class="d-flex justify-content-around">
                 <button class="btn btn-info w-25 btn-grd" type="button" id="btn_editar">Editar perfil</button>
-
-                <!-- Cambiar foto de perfil -->
-                <button class="btn btn-warning w-25" type="button" id="btn_foto">Cambiar foto de perfil</button>
 
                 <button class="btn btn-danger w-25" type="button" id="btn_contrasenia" data-bs-toggle="modal"
                     data-bs-target="#modalAccion">Cambiar

@@ -103,9 +103,7 @@
                             <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                         </div>
                         <textarea class="form-control inp" name="otras_senias" id="otras_senias" cols="30"
-                            rows="3">
-                            <?php if(isset($otras_senias)) echo $otras_senias; ?>
-                        </textarea>
+                            rows="3"><?php if(isset($otras_senias)) echo trim($otras_senias); ?></textarea>
                     </div>
                 </div>
             </div>

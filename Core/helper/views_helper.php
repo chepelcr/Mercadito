@@ -60,6 +60,26 @@ function post($name = null)
     return false;
 }//Fin del metodo
 
+function server_file($name = null)
+{
+    if(!empty($_FILES))
+    {
+        if($name)
+        {
+            if(isset($_FILES[$name]))
+                return $_FILES[$name];
+
+            return false;
+        }
+                
+        $data = json_encode($_FILES);
+
+        return json_decode($data);
+    }//Fin de la validacion
+
+    return false;
+}//Fin del metodo
+
 /**Obtener una variable desde una solicitud GET */
 function get($name = null)
 {

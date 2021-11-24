@@ -51,9 +51,6 @@
                         <a class="nav-link" href="<?=baseUrl('mercado')?>">Mercadito</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=baseUrl('contacto/quienes_somos')?>">Quienes somos</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="<?=baseUrl('contacto')?>">Contacto</a>
                     </li>
                 </ul>

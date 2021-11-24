@@ -4,7 +4,7 @@
             <div class="card-body">
                 <div class="row">
                     <?php
-                        echo view('mercadito/nav', array('submodulo'=>'usuarios','objeto'=>'administrador'));
+                        echo view('mercadito/nav', array('objeto'=>'administrador'));
                     ?>
                 </div>
             </div>

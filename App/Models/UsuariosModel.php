@@ -22,6 +22,8 @@ class UsuariosModel extends Model
 		'telefono',
 		'id_nacionalidad',
 		'id_rol',
+		'id_ubicacion',
+		'otras_senias',
 		'fecha_nacimiento',
 		'fecha_registro',
 		'fecha_actualizacion',
@@ -36,9 +38,13 @@ class UsuariosModel extends Model
 	//Obtener los usuarios de rol 1
 	public function getUsuarios()
 	{
-		$this->where('id_rol', 1);
+		return $this->where('id_rol', 1)->getAll();
+	}//Fin de la función getAll
 
-		return $this->getAll();
-	}//fIN de la funcion
+	//Obtener un usuario con rol 1, por su id
+	public function getById($id)
+	{
+		return $this->where('id_rol', 1)->where('id_usuario', $id)->fila();
+	}//Fin de la función getById
 }//Fin de la clase
 ?>

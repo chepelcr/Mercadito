@@ -12,10 +12,6 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="<?=baseUrl('contacto/quienes_somos')?>">¿Quienes somos?</a>
-                </li>
-
-                <li class="nav-item">
                     <a class="nav-link" href="<?=baseUrl('contacto')?>">Contacto</a>
                 </li>
             </ul>
@@ -26,19 +22,26 @@
                         {
                             if(!is_admin())
                             {
+                                //Mostrar puesto
                                 echo '<li class="nav-item">
-                                <a class="nav-link" href="'.baseUrl("mercado/productos").'">Productos <i class="fa fa-shopping-cart"></i>
-                                </a></li>';
+                                    <a class="nav-link" href="'.baseUrl("mercado/puesto").'">
+                                        Puesto <i class="fas fa-people-carry"></i>
+                                    </a>
+                                </li>';
+
+                                 //Mostrar catalogo
+                                 echo '<li class="nav-item">
+                                    <a class="nav-link" href="'.baseUrl("mercado/catalogo").'">
+                                        Catalogo <i class="fas fa-shopping-cart"></i>
+                                    </a>
+                                </li>';
                             }
 
                             else
                             {
-                                echo '<li class="nav-item">
-                                <a class="nav-link" href="'.baseUrl("mercado/inscripciones").'">Inscripciones <i class="fas fa-store-alt"></i></a></li>';
-                                echo '<li class="nav-item">
-                                <a class="nav-link" href="'.baseUrl("seguridad").'">Administradores <i class="fas fa-users"></i></a>
-                                <!-- Icono de usuarios-->
-                                </li>';
+                                echo view('base/nav/drop_seguridad');
+
+                                echo view('base/nav/drop_feria');
                             }
 
                             //Perfil
@@ -47,18 +50,6 @@
                             
                             </li>';
                         }
-
-                        else
-                        {
-                            //Inscripciones
-                            echo '<li class="nav-item">
-                            <a class="nav-link" href="'.baseUrl("mercado/inscripciones").'">Inscripciones 
-                            <!-- Icono de tienda -->
-                            <i class="fas fa-store-alt"></i></a></li>';
-
-                        }
-
-                        
                     ?>
                 </ul>
             </form>

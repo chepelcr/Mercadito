@@ -1,18 +1,14 @@
-//Cuando se le da click al boton de modificar
-$(document).on('click', '#btn_informacion', function() {
+//Cuando se le da click al boton de informacion
+$(document).on('click', '.btt_inf', function() {
     var id_puesto = this.value;
 
-    //document.getElementById('puesto').innerHTML = '';
+    var nombre = 'informacion_puesto'
 
-    /*$.ajax({
-        "url": base + "puesto/obtener/" + id_puesto,
-        "dataType": "json",
-    }).done(function (response) {
-        document.getElementById('puesto').innerHTML = response;
-    });*/
+    console.log(nombre);
 
-    var modal_informacion = new bootstrap.Modal(document.getElementById('informacion_puesto'), {
+    var modal_informacion = new bootstrap.Modal(document.getElementById(nombre), {
         keyboard: false
     });
+
     modal_informacion.show();
 });

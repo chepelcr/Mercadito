@@ -12,7 +12,7 @@ $(document).ready(function() {
 
         Pace.track(function () {
             $.ajax({
-                "url": base + "mercado/guardar/participantes",
+                "url": base + "seguridad/guardar/participantes",
                 "method": "post",
                 "data": $('#frm').serialize(),
                 "dataType": "json",
