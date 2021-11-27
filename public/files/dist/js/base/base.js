@@ -1,5 +1,5 @@
-//var base = "http://192.168.0.5/universidad/tcu/mercadito/Mercadito/public/";
-var base = "https://206.189.246.224/";
+var base = "http://localhost/universidad/tcu/mercadito/Mercadito/public/";
+//var base = "http://206.189.246.224/";
 
 //Inicializar los tooltips
 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

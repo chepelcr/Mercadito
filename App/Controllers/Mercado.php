@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Librerias\FileUpload;
-use App\Models\ParticipantesModel;
 use App\Models\ProductosModel;
 use App\Models\PuestosModel;
 
@@ -125,7 +124,7 @@ class Mercado extends BaseController
 		return redirect('mercado');
 	}
 
-	//Guardar productos
+	//Guardar productos o puesto
 	public function guardar($objeto = null)
 	{
 		if (!is_login()) {
