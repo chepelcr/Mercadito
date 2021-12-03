@@ -27,16 +27,16 @@ function llenarFrm(objeto, titulo)
             $("#" + key).val(valor)
         });
 
-        campos_activos(false);
-        
         $(".titulo-form").html(titulo);
-
-        //Mostrar el modal del usuario
-        $('#modalAccion').modal('show');
 
         $('.btt-mod').show();
         $('.btt-edt').hide();
         $('.btt-grd').hide();
+
+        campos_activos(false);
+
+        //Mostrar el modal
+        $('#modalAccion').modal('show');
     }//Fin de la validacion
 }//Fin de la funcion
 
@@ -78,13 +78,15 @@ $(document).ready(function(){
         $('.btt-edt').hide();
         $('.btt-grd').show();
 
-        vaciar_campos(false);
+        vaciar_campos();
+        campos_activos(false);
         
         $('#modalAccion').modal('show');
     });
 
     //Cuando se cierra el modal de acciones
     $('#modalAccion').on('hidden.bs.modal', function() {
-        vaciar_campos(true);
+        vaciar_campos();
+        campos_activos(true);
     });
 });

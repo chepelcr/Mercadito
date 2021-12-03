@@ -17,7 +17,7 @@ function habilitar(id_usuario) {
     });
 }//Fin de habilitar un usuario
 
-//Cambiar el estado del campo de la cedula
+/**Cambiar el estado del campo de cedula de un usuario */
 function campo_cedula(estado)
 {
     $("#tipo_identificacion").attr("disabled", estado);
@@ -92,7 +92,7 @@ $(document).ready(function () {
                     mensajeAutomaticoRecargar("Alerta", 'Usuario agregado correctamente', "success");
                 } //Fin del if
                 else {
-                    mensajeAutomatico('Atencion', 'Ha ocurrido un error: ' + response.error.sentencia, 'error');
+                    mensajeAutomatico('Atencion', 'Ha ocurrido un error: ' + response.error, 'error');
                 } //Fin del else
             });
         });

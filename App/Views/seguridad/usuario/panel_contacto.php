@@ -1,10 +1,16 @@
 <!-- Informacion de contacto -->
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">
+        <h4 class="card-title">
             <i class="fas fa-user-tie"></i>
             Informacion de contacto
-        </h3>
+        </h4>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
     </div>
 
     <div class="card-body">

@@ -175,7 +175,8 @@ use App\Models\UsuariosModel;
 	/**Enviar una contrasenia temporal a un usuario por correo electronico */
 	function enviar_contrasenia_temporal($usuario)
 	{
-		$pass = generar_password_complejo(8);
+		$pass = 1234;
+		//$pass = generar_password_complejo(8);
 
 		$contraseniaModel = new ContraseniaModel();
 		$contraseniaModel->where('id_usuario', $usuario->id_usuario);
