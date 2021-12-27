@@ -1,17 +1,12 @@
 <!-- Footer -->
-<div class="container">
-    <div class="container-fluid">
-        <footer class="text-center text-lg-start pb-2">
+<footer class="pb-2">
+    <div class="container">
+        <div class="container-fluid">
             <!-- Section: Links  -->
-            <section class="d-flex justify-content-center justify-content-lg-between pb-2">
-                <div class="container text-center text-md-start">
-                <?= view('base/nav-inf')?>
-                </div>
-            </section>
-            <!-- Section: Links  -->
+            <?= view('base/nav-inf')?>
 
-            <div class="container bg-mercadito-oscuro rounded text-white">
-                <div class="row pt-2">
+            <div class="container pt-2">
+                <div class="row pt-2 bg-mercadito-oscuro rounded text-white">
                     <!-- Copyright -->
                     <div class="col-8">
                         <section class="pt-2">
@@ -52,7 +47,7 @@
                     <!-- Copyright -->
                 </div>
             </div>
-        </footer>
+        </div>
     </div>
-</div>
+</footer>
 <!-- Footer -->

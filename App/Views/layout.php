@@ -11,16 +11,20 @@
     ?>
 </head>
 
-<body class="bg-mercadito-claro">
+<body class="bg-mercadito-claro pt-2">
     <div class="container">
         <div class="container-fluid">
-            <img src="<?=getFile('images/letras feria.png')?>" class="img-fluid align-self-center pt-2 pb-2" alt="">
+            <img src="<?=getFile('images/letras feria.png')?>" class="img-fluid align-self-center pb-2" alt="">
 
             <?php 
                 echo view('base/navbar');
             ?>
+        </div>
+    </div>
 
-            <div class="row p-2">
+    <div class="container pt-2">
+        <div class="container-fluid">
+            <div class="row">
                 <div class="col-md-12">
                     <?php 
                         if(isset($dataView))

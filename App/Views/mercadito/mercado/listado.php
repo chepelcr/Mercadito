@@ -1,4 +1,4 @@
-<div class="card bg-transparent">
+<div class="card card-dark">
     <div class="card-header text-white bg-dark">
         <h1 class="card-title fs-4">Mercadito Virtual del Trueque</h1>
     </div>

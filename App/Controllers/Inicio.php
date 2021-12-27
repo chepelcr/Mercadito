@@ -15,7 +15,7 @@ class Inicio extends BaseController
 			$nombreVista = 'inicio/index';
 
 			$script = '<!-- Documentos -->
-			<script src="'.getFile('dist/js/inicio.js').'"></script>';
+			<script src="'.getFile('dist/js/base/inicio.js').'"></script>';
 
 			$data = array(
 				'nombreVista'=>$nombreVista,
