@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ubicaciones.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ubicaciones.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**Obtener todos los cantones para una provincia
+ * @param {string} cod_provincia Codigo de la provincia
+ */
+function obtener_cantones(cod_provincia = '') {
+    if(cod_provincia == '') {
+        var cod_provincia = $('#' + elemento_activo).find(".provincia").val();
+    }
+
+    var html = crear_option('', 'Seleccionar');
+
+    $('#' + elemento_activo).find('.distrito').html(html);
+    activar_campo_clase('distrito', true, elemento_activo);
+
+    $('#' + elemento_activo).find('.barrio').html(html);
+    activar_campo_clase('barrio', true, elemento_activo);
+
+    Pace.track(function () {
+        $.ajax({
+            "url": base + 'ubicacion/cantones/' + cod_provincia,
+            "dataType": "json",
+            "method": "GET"
+        }).done(function (response) {
+            if (response) {
+                //0: {cod_canton:1 , nom_canton: canton}
+                $.each(response, function (i, canton) {
+                    html += crear_option(canton.cod_canton, canton.canton);
+                });
+            }
+
+            $('#' + elemento_activo).find('.canton').html(html);
+            activar_campo_clase('canton', false, elemento_activo);
+        });
+    });
+}
+
+/**Obtener todos los distritos de un canton 
+ * @param {string} cod_provincia Codigo de la provincia
+ * @param {string} cod_canton Codigo del canton
+*/
+function obtener_distritos(cod_provincia = '', cod_canton = '') {
+    if(cod_provincia == '') {
+        var cod_provincia = $('#' + elemento_activo).find(".provincia").val();
+    }
+
+    if(cod_canton == '') {
+        var cod_canton = $('#' + elemento_activo).find(".canton").val();
+    }
+
+    var html = crear_option('', 'Seleccionar');
+
+    $('#' + elemento_activo).find('.barrio').html(html);
+    activar_campo_clase('barrio', true, elemento_activo);
+
+    Pace.track(function () {
+        $.ajax({
+            "url": base + 'ubicacion/distritos/' + cod_provincia + '/' + cod_canton,
+            "dataType": "json",
+            "method": "GET"
+        }).done(function (response) {
+            if (response) {
+                $.each(response, function (i, distrito) {
+                    html += crear_option(distrito.cod_distrito, distrito.distrito);
+                });
+            }
+
+            $('#' + elemento_activo).find('.distrito').html(html);
+            activar_campo_clase('distrito', false, elemento_activo);
+        });
+    });
+}
+
+/**Obtener todos los barrios de un distrito */
+function obtener_barrios(cod_provincia = null, cod_canton = null, cod_distrito = null) {
+    if(cod_provincia == null) {
+        var cod_provincia = $('#' + elemento_activo).find(".provincia").val();
+    }
+
+    if(cod_canton == null) {
+        var cod_canton = $('#' + elemento_activo).find(".canton").val();
+    }
+
+    if(cod_distrito == null) {
+        var cod_distrito = $('#' + elemento_activo).find(".distrito").val();
+    }
+
+    var html = crear_option('', 'Seleccionar');
+
+    Pace.track(function () {
+        $.ajax({
+            "url": base + 'ubicacion/barrios/' + cod_provincia + '/' + cod_canton + '/' + cod_distrito,
+            "dataType": "json",
+            "method": "GET"
+        }).done(function (response) {
+            if (response) {
+                $.each(response, function (i, barrio) {
+                    html += crear_option(barrio.id_ubicacion, barrio.barrio);
+                });
+            }
+
+            $('#' + elemento_activo).find('.barrio').html(html);
+            activar_campo_clase('barrio', false, elemento_activo);
+        });
+    });
+}
+
+/**Llenar la ubicacion */
+function llenarUbicacion(cod_provincia, cod_canton, cod_distrito, id_ubicacion, ver = false) {
+    var html = crear_option('', 'Seleccionar');
+
+    //Poner el codigo de la provincia
+    $('#' + elemento_activo).find('.provincia').val(cod_provincia);
+
+    $('#' + elemento_activo).find('.canton').html(html);
+    activar_campo_clase('canton', true, elemento_activo);
+
+    $('#' + elemento_activo).find('.distrito').html(html);
+    activar_campo_clase('distrito', true, elemento_activo);
+
+    $('#' + elemento_activo).find('.barrio').html(html);
+    activar_campo_clase('barrio', true, elemento_activo);
+
+    var html_canton = html;
+    var html_distritos = html;
+    var html_barrios = html;
+
+    Pace.track(function () {
+        $.ajax({
+            "url": base + 'ubicacion/cantones/' + cod_provincia,
+            "dataType": "json",
+            "method": "GET"
+        }).done(function (response) {
+            if (response) {
+                //0: {cod_canton:1 , nom_canton: canton}
+                $.each(response, function (i, canton) {
+                    html_canton += crear_option(canton.cod_canton, canton.canton);
+                });
+
+                $('#' + elemento_activo).find('.canton').html(html_canton);
+                $('#' + elemento_activo).find('.canton').val(cod_canton);
+                
+                $.ajax({
+                    "url": base + 'ubicacion/distritos/' + cod_provincia + '/' + cod_canton,
+                    "dataType": "json",
+                    "method": "GET"
+                }).done(function (response) {
+                    if (response) {
+                        $.each(response, function (i, distrito) {
+                            html_distritos += crear_option(distrito.cod_distrito, distrito.distrito);
+                        });
+
+                        $('#' + elemento_activo).find('.distrito').html(html_distritos);
+                        $('#' + elemento_activo).find('.distrito').val(cod_distrito);
+
+                        $.ajax({
+                            "url": base + 'ubicacion/barrios/' + cod_provincia + '/' + cod_canton + '/' + cod_distrito,
+                            "dataType": "json",
+                            "method": "GET"
+                        }).done(function (response) {
+                            if (response) {
+                                $.each(response, function (i, barrio) {
+                                    html_barrios += crear_option(barrio.id_ubicacion, barrio.barrio);
+                                });
+
+                                $('#' + elemento_activo).find('.barrio').html(html_barrios);
+                                $('#' + elemento_activo).find('.barrio').val(id_ubicacion);
+                            }
+                        });
+
+                        if(ver)
+                        {
+                            desactivar_ubicaciones(true, true);
+                        }
+
+                        else
+                        {
+                            desactivar_ubicaciones(false);
+                        }
+                    }
+                });
+            }
+        });
+    });
+}//Fin de la funcion
+
+/**Vaciar los campos de ubicacion */
+function vaciar_ubicacion() {
+    var html = crear_option('', 'Seleccionar');
+
+    $('#' + elemento_activo).find('.provincia').val('');
+
+    $('#' + elemento_activo).find('.canton').html(html);
+    $('#' + elemento_activo).find('.distrito').html(html);
+    $('#' + elemento_activo).find('.barrio').html(html);
+
+    desactivar_ubicaciones(true);
+}
+
+/**Desactivar los campos de ubicacion */
+function desactivar_ubicaciones(estado = true, provincia = false) {
+    activar_campo_clase('provincia', provincia, elemento_activo);
+    activar_campo_clase('canton', estado, elemento_activo);
+    activar_campo_clase('distrito', estado, elemento_activo);
+    activar_campo_clase('barrio', estado, elemento_activo);
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#abrir_modal">abrir_modal</a></li><li><a href="global.html#abrir_perfil">abrir_perfil</a></li><li><a href="global.html#activar_modulo_boton">activar_modulo_boton</a></li><li><a href="global.html#activar_tooltip_tabla">activar_tooltip_tabla</a></li><li><a href="global.html#activar_tooltips">activar_tooltips</a></li><li><a href="global.html#base">base</a></li><li><a href="global.html#cargar_contenido">cargar_contenido</a></li><li><a href="global.html#cargar_inicio">cargar_inicio</a></li><li><a href="global.html#cargar_inicio_modulo">cargar_inicio_modulo</a></li><li><a href="global.html#cargar_listado">cargar_listado</a></li><li><a href="global.html#cargar_modulo">cargar_modulo</a></li><li><a href="global.html#cerrar_modal">cerrar_modal</a></li><li><a href="global.html#crear_data_table">crear_data_table</a></li><li><a href="global.html#desactivar_tooltips">desactivar_tooltips</a></li><li><a href="global.html#desactivar_tooltips_tabla">desactivar_tooltips_tabla</a></li><li><a href="global.html#desactivar_ubicaciones">desactivar_ubicaciones</a></li><li><a href="global.html#elemento_activo">elemento_activo</a></li><li><a href="global.html#elemento_anterior">elemento_anterior</a></li><li><a href="global.html#enfocar_fila_actual">enfocar_fila_actual</a></li><li><a href="global.html#fila_actual">fila_actual</a></li><li><a href="global.html#filtrar_tabla">filtrar_tabla</a></li><li><a href="global.html#formatear_cedula">formatear_cedula</a></li><li><a href="global.html#llenarUbicacion">llenarUbicacion</a></li><li><a href="global.html#loading">loading</a></li><li><a href="global.html#mensaje">mensaje</a></li><li><a href="global.html#mensajeAutomatico">mensajeAutomatico</a></li><li><a href="global.html#mensajeAutomaticoAccion">mensajeAutomaticoAccion</a></li><li><a href="global.html#mensajeAutomaticoRecargar">mensajeAutomaticoRecargar</a></li><li><a href="global.html#modal_activo">modal_activo</a></li><li><a href="global.html#modulo_activo">modulo_activo</a></li><li><a href="global.html#obtener_barrios">obtener_barrios</a></li><li><a href="global.html#obtener_cantones">obtener_cantones</a></li><li><a href="global.html#obtener_contribuyente">obtener_contribuyente</a></li><li><a href="global.html#obtener_distritos">obtener_distritos</a></li><li><a href="global.html#obtener_tipo_cambio">obtener_tipo_cambio</a></li><li><a href="global.html#ocultar_contenedores">ocultar_contenedores</a></li><li><a href="global.html#poner_titulo">poner_titulo</a></li><li><a href="global.html#recargar_listado">recargar_listado</a></li><li><a href="global.html#salir">salir</a></li><li><a href="global.html#siguiente_elemento">siguiente_elemento</a></li><li><a href="global.html#submodulo_activo">submodulo_activo</a></li><li><a href="global.html#table">table</a></li><li><a href="global.html#url_listado">url_listado</a></li><li><a href="global.html#vaciar_ubicacion">vaciar_ubicacion</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Mar 15 2022 14:28:24 GMT-0600 (hora estándar central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

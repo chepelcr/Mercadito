@@ -8,12 +8,14 @@
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
 </script>
 
-
+<!-- AdminLTE App -->
+<script src="<?=getFile('dist/js/adminlte.min.js')?>"></script>
 
 <!-- overlayScrollbars -->
 <script src="<?=getFile('dist/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')?>"></script>
-<!-- AdminLTE App -->
-<script src="<?=getFile('dist/js/adminlte.min.js')?>"></script>
+
+<!-- Pace -->
+<script src="<?=getFile('dist/plugins/pace-progress/pace.min.js')?>"></script>
 
 <!-- SweetAlert -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -21,19 +23,54 @@
 <!-- Font-Awesome -->
 <script src="https://kit.fontawesome.com/3e7bda16db.js" crossorigin="anonymous"></script>
 
-<!-- Pace -->
-<script src="<?=getFile('dist/plugins/pace-progress/pace.min.js')?>"></script>
+<!--DataTables-->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
 
-<!-- Cleave-->
-<script src="<?=getFile('dist/plugins/cleave.js/dist/cleave.min.js')?>"></script>
+<!-- DataTables || Select -->
+<script src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
 
-<!-- Cleave phone-->
-<script src="https://nosir.github.io/cleave.js/dist/cleave-phone.i18n.js"></script>
 
-<!-- Script base-->
-<script src="<?=getFile('dist/js/base/base.js')?>"></script>
+<!-- Base | Mensajes -->
+<?=getScript('base/mensajes')?>
+
+<!-- Base | Login -->
+<?=getScript('base/login')?>
+
+<!-- Base | Nav -->
+<?=getScript('base/nav')?>
+
+<!-- Base | Modulos -->
+<?=getScript('base/modulos')?>
+
+<!-- Base | Listado -->
+<?=getScript('base/listado')?>
+
+<!-- Base | Ubicaciones -->
+<?=getScript('base/ubicaciones')?>
+
+<!-- Base | Hacienda -->
+<?=getScript('base/hacienda')?>
+
+<!-- Form | Campos -->
+<?=getScript('form/campos')?>
+
+<!-- Form | Operaciones -->
+<?=getScript('form/operaciones')?>
+
+<!-- Form || Permisos -->
+<?=getScript('form/permisos')?>
 
 <?php
+    if(is_login())
+    {
+?>
+
+<!-- Seguridad | Usuarios -->
+<?=getScript('seguridad/usuarios')?>
+
+<?php
+    }//is_login
+
     if(isset($script))
         echo $script;
 ?>

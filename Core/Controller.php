@@ -7,7 +7,7 @@
         protected $helpers = [];
 
         /**Archivos de ayuda predeterminados */
-        private $base_helpers = ['auditorias', 'views', 'session'];
+        private $base_helpers = ['auditorias', 'views', 'session', 'core'];
 
         /**Modelo de la aplicacion */
         private Model $model;
@@ -59,23 +59,18 @@
 
         public function error($error = array())
         {
-            $nombreVista = 'base/error';
-            
-            $dataHead = array(
-				'titulo' => 'Error',
-			);
+            $nombreVista = 'base/error';            
 
 			$dataView = array(
-                'error'=>$error,
+				'error'=>$error,
 			);
 
             $data = array(
                 'nombreVista'=>$nombreVista,
-                'dataView'=>$dataView,
-                "dataHead" => $dataHead,
+                'dataView'=>$dataView
             );
 
-            return view('layout', $data);
+            return view($nombreVista, $dataView);
         }//Fin de la funcion error
 
         /**Establecer un modelo en el controlador */
@@ -97,12 +92,10 @@
         {
             $error = array(
                 'codigo'=>$codigo,
-                'mensaje'=>$mensaje
+                'error'=>$mensaje
             );
-
-            $data = json_encode($error);
-
-            return json_decode($data);
+            
+            return (object) $error;
         }//Fin de la funcion
 
         /**Enviar un error en formato json */
@@ -111,7 +104,7 @@
             $error = array(
                 'error'=>array(
                     'codigo'=>$codigo,
-                    'mensaje'=>$mensaje
+                    'error'=>$mensaje
                 )
             );
 
@@ -179,38 +172,52 @@
                     {
                         if($this->isModulo)
                             if(validar_permiso($this->nombre_modulo, $objeto, 'consultar'))
-                                return json_encode($model->getAll());
+                                return json_encode($model->obtener('all'));
                         
                         //Si el usuario ya inicio sesion
                         elseif(is_login())
-                            return json_encode($model->getAll());
+                            return json_encode($model->obtener('all'));
 
                         //Si el usuario no ha iniciado sesion
                         else
                         {
-                            $error = $this->object_error(4, 'Debe iniciar sesion para obtener la informacion');
-
-                            //Enviar un error al usuario
-                            return $this->error($error);
+                            return $this->data_error(4, 'Debe iniciar sesion para obtener la informacion');
                         }
                     }//Fin de la validacion de login
 
                     else
-                        return json_encode($model->getAll());
+                        return json_encode($model->obtener('all'));
                 break;
 
                 case '':
                     //Enviar un error al usuario
-                    $error = $this->data_error(1, 'Se ha generado un error en la solicitud');
+                    return $this->data_error(1, 'Se ha generado un error en la solicitud');
                 break;
                 
                 default:
-                    return json_encode($model->getById($id));
+                    if($validacion_login)
+                    {
+                        if($this->isModulo)
+                            if(validar_permiso($this->nombre_modulo, $objeto, 'consultar'))
+                                return json_encode($model->obtener($id));
+                        
+                        //Si el usuario ya inicio sesion
+                        elseif(is_login())
+                            return json_encode($model->obtener($id));
+
+                        //Si el usuario no ha iniciado sesion
+                        else
+                        {
+                            return $this->data_error(4, 'Debe iniciar sesion para obtener la informacion');
+                        }
+                    }//Fin de la validacion de login
+
+                    else
+                        return json_encode($model->obtener($id));
                 break;
             }//Fin del switch
-
-            //Enviar un error al usuario
-            return $this->error($error);
+            
+            return $this->data_error(1, 'Se ha generado un error en la solicitud');
 		}//Fin de la funcion para obtener objetos de la aplicacion
 
         /**Validar si existe un objeto de la base de datos por código */
@@ -315,7 +322,7 @@
                     //Si el usuario ya inicio sesion
                     if(is_login())
                     {
-                        if(!is_admin())
+                        if(!validar_permiso($this->nombre_modulo, $objeto, 'modificar'))
                             return json_encode(array(
                                 'error' => 'No tiene permisos para realizar esta accion'
                             ));
@@ -415,7 +422,7 @@
                     //Si el usuario ya inicio sesion
                     if(is_login())
                     {
-                        if(!is_admin())
+                        if(!validar_permiso($this->nombre_modulo, $objeto, 'modificar'))
                             return json_encode(array(
                                 'error' => 'No tiene permisos para realizar esta accion'
                             ));

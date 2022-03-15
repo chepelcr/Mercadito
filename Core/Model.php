@@ -20,7 +20,7 @@ class Model
     protected $vistaTabla;
 
     /** Nombre de la llave primaria */
-	protected $pk_tabla = "id";
+	protected $pk_tabla = false;
 
     /** Columnas que se deben ingresar al modelo */
     protected $camposTabla = [];
@@ -84,13 +84,16 @@ class Model
 
     /**Error generado en el modelo */
     protected $error = array();
+
+    private Model $model;
  
 	//constructor de la clase
-	function __construct()
+	function __construct($model_name = null)
     {
         //Intentar conexion a la base de datos
 		try
         {
+            //Obtener la conexion a la base de datos
             if($this->dbGroup!='')
                 $this->db = Conexion::getConnect($this->dbGroup);
 
@@ -165,7 +168,7 @@ class Model
 
             $this->setCamposUpdate($data);
             
-            if($id)
+            if(isset($id))
                 $this->where($this->pk_tabla, $id);
 
             $sql = $this->crearQuery('UPDATE');
@@ -176,8 +179,7 @@ class Model
                 $update->bindValue($campo, $valor);
             }
 
-            
-            if($id)
+            if(isset($id))
                 $update->bindValue($this->pk_tabla, $id);
 
             $update->execute();
@@ -189,9 +191,15 @@ class Model
 
                 if(!$id_usuario)
                     $id_usuario = 0;
+
+                if(isset($id))
+                    $id_fila = $id;
+    
+                else
+                    $id_fila = 1;
                     
                 $data = array(
-                    'id_fila'=> $id,
+                    'id_fila'=> $id_fila,
                     'tabla'=>$this->nombreTabla,
                     'accion'=>'UPDATE',
                     'id_usuario'=>$id_usuario
@@ -200,7 +208,10 @@ class Model
                 $this->insertAuditoria($data);
             }
 
-            return $id;
+            if(isset($id))
+                return $id;
+            
+            return true;
         }//Fin del try
 
         catch (\Exception $ex) 
@@ -209,9 +220,9 @@ class Model
             {
                 $this->insertError($ex);
             }//Fin de validacion
-
-            return 0;
         }//Fin del catch
+
+        return false;
   }//Fin del método
 
     /**Seleccionar una columna especifica de la tabla */
@@ -355,12 +366,15 @@ class Model
             $camposTabla = $this->camposTabla;
             $camposVista = $this->camposVista;
 
-            $data[$espacio] = $pk_tabla;
+            if($pk_tabla)
+            {
+                $data[$espacio] = $pk_tabla;
+                $espacio = $espacio + 1;
+            }
 
             foreach ($camposTabla as $campo) {
-                $espacio = $espacio+1;
-
                 $data[$espacio] = $campo;
+                $espacio = $espacio+1;
             }//Fin del ciclo para llenar los campos
 
             if(isset($this->vistaTabla))
@@ -556,13 +570,12 @@ class Model
 
                 $result = $select->fetch();
 
+                //var_dump($result);
+
                 if(!$result)
                 {
                     return false;
                 }//Fin del if
-
-                //Limpiar las variables del sql
-                $this->clean();
 
                 $data = array();
 
@@ -570,14 +583,13 @@ class Model
 
                 foreach ($camposTabla as $campoTabla) 
                 {
-                    $data[$campoTabla] = $result[$campoTabla];
+                    if(isset($result[$campoTabla]))
+                            $data[$campoTabla] = $result[$campoTabla];
                 }//Fin del ciclo
                 
-                $data = json_encode($data);
-
-                return json_decode($data);
+                return (object) $data;
             }//Fin del if
-        } 
+        }
         
         catch (\Exception $ex) 
         {
@@ -585,9 +597,11 @@ class Model
             {
                 $this->insertError($ex);
             }//Fin de validacion
+
+            return false;
         }//Fin del catch
 
-        return null;
+        return false;
     }//Fin de fila
 
     /** Determinar el tipo de objeto a retornar (array o json) */
@@ -659,26 +673,68 @@ class Model
     {
         $pk = $this->pk_tabla;
 
-        //Campos para la tabla
-        $campos = "(".$pk;
-        $camposTabla = $this->camposTabla;
-
-        $values = "(:".$pk;
-
-        $data = $this->insertPk($data);
-
-        //Ciclo para crear la sentencia con los campos y valores que seran agregados a la tabla
-        foreach ($data as $clave => $valor) 
+        if($this->autoIncrement = true)
         {
-            //Ciclo para validar si el campo se encuentra en la tabla
-            foreach ($camposTabla as $campo) {
-                if($clave == $campo)
-                {
-                    $campos = $campos.", ".$clave;
-                    $values = $values.", :".$clave;
-                }
-            }//Fin del ciclo de validacion
-        }//Fin del ciclo
+            //Campos para la tabla
+            $campos = "(".$pk;
+            $camposTabla = $this->camposTabla;
+
+            $values = "(:".$pk;
+
+            $data = $this->insertPk($data);
+
+            //Ciclo para crear la sentencia con los campos y valores que seran agregados a la tabla
+            foreach ($data as $clave => $valor) 
+            {
+                //Ciclo para validar si el campo se encuentra en la tabla
+                foreach ($camposTabla as $campo) {
+                    if($clave == $campo)
+                    {
+                        $campos = $campos.", ".$clave;
+                        $values = $values.", :".$clave;
+                    }
+                }//Fin del ciclo de validacion
+            }//Fin del ciclo
+        }//Fin del if
+
+        else
+        {
+            //Campos para la tabla
+            $campos = "(";
+            $camposTabla = $this->camposTabla;
+
+            $values = "(";
+
+            $data = $this->insertPk($data);
+
+            $espacio = 1;
+
+            //Ciclo para crear la sentencia con los campos y valores que seran agregados a la tabla
+            foreach ($data as $clave => $valor) 
+            {
+                //Ciclo para validar si el campo se encuentra en la tabla
+                foreach ($camposTabla as $campo) {
+                    if($clave == $campo)
+                    {
+                        switch ($espacio) {
+                            case '1':
+                                $campos = $campos.$clave;
+                                $values = $values.":".$clave;
+
+                                $espacio++;
+                                break;
+                            
+                            default:
+                                $campos = $campos.", ".$clave;
+                                $values = $values.", :".$clave;
+                                break;
+                        }//Fin del switch
+                    }//Fin del if
+                }//Fin del ciclo de validacion
+            }//Fin del ciclo
+        }
+
+        
 
         if($this->useTimesnaps)
         {
@@ -745,7 +801,11 @@ class Model
                         $this->insertAuditoria($audit);
                     }//Fin de la insercion de auditoria
 
-                    return $data[$this->pk_tabla];
+                    //Si hay un dato en el campo de la llave primaria
+                    if($this->pk_tabla)
+                        return $data[$this->pk_tabla];
+
+                    return true;
                 }//Fin de la ejecucion
                 
                 else
@@ -762,6 +822,8 @@ class Model
             {
                 $this->insertError($ex);
             }//Fin de validacion
+
+            return false;
         }//Fin del catch
     }//Fin de la funcion
     
@@ -777,6 +839,8 @@ class Model
             {
                 if(isset($this->vistaTabla))
                     $this->table($this->vistaTabla);
+
+                    //var_dump($this->nombreTabla);
                 
                 //Crear la sentencia de ejecucion
                 $sql = $this->crearQuery();
@@ -824,17 +888,15 @@ class Model
                 foreach ($result as $objeto) {
                     $data = [];
 
-                    //var_dump($camposTabla);
                     foreach ($camposTabla as $campoTabla) {
-                        $data[$campoTabla] = $objeto[$campoTabla];
+                        if(isset($objeto[$campoTabla]))
+                            $data[$campoTabla] = $objeto[$campoTabla];
                     }
                     
-                    $objetos[] = $data;
+                    $objetos[] = (object)  $data;
                 }
 
-                $objetos = json_encode($objetos);
-
-                return json_decode($objetos);
+                return (object) $objetos;
             }//Fin de la base de datos no nula
         }//Fin del intento
         
@@ -845,6 +907,8 @@ class Model
                 $this->insertError($ex);
             }//Fin de validacion
         }//Fin del catch
+
+        return false;
     }//Fin de buscar
 
     /**Utilizar una tabla personalizada */
@@ -883,6 +947,19 @@ class Model
             }//Fin de validacion
         }//Fin del catch
 	}//Fin de getByID
+
+    /**Obtener uno o varios objetos de la base de datos */
+    public function obtener($id)
+    {
+        if($id == 'all')
+		{
+			return $this->getAll();
+		}
+		else
+		{
+			return $this->getById($id);
+		}
+    }//Fin de la funcion obtener
 
     /**Eliminar un registro de la base de datos */
 	public function delete($id)

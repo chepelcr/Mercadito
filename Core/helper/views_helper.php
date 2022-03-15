@@ -39,6 +39,17 @@ function getFile($name = '')
     return false;
 }//Fin de la funcion
 
+/**Obtener un script */
+function getScript($name = '')
+{
+    if($name!='')
+    {
+        return '<script src="'.getFile('dist/js/'.$name.'.js').'"></script>';
+    }
+
+    return '';
+}//Fin de la funcion
+
 /**Obtener una variable desde una solicitud POST */
 function post($name = null)
 {
@@ -53,26 +64,6 @@ function post($name = null)
         }
                 
         $data = json_encode($_POST);
-
-        return json_decode($data);
-    }//Fin de la validacion
-
-    return false;
-}//Fin del metodo
-
-function server_file($name = null)
-{
-    if(!empty($_FILES))
-    {
-        if($name)
-        {
-            if(isset($_FILES[$name]))
-                return $_FILES[$name];
-
-            return false;
-        }
-                
-        $data = json_encode($_FILES);
 
         return json_decode($data);
     }//Fin de la validacion

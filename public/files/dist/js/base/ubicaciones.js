@@ -1,200 +1,204 @@
-$(document).ready(function() {
-    //Busqueda de cantones
-    $(".provincia").on('change', function() {
-        var cod_provincia = this.value;
+/**Obtener todos los cantones para una provincia
+ * @param {string} cod_provincia Codigo de la provincia
+ */
+function obtener_cantones(cod_provincia = '') {
+    if(cod_provincia == '') {
+        var cod_provincia = $('#' + elemento_activo).find(".provincia").val();
+    }
 
-        var html = '<option value="">Seleccionar</option>';
+    var html = crear_option('', 'Seleccionar');
 
-        $(".canton").attr("disabled", true);
-        
-        $('.distrito').html(html);
-        $(".distrito").attr("disabled", true);
+    $('#' + elemento_activo).find('.distrito').html(html);
+    activar_campo_clase('distrito', true, elemento_activo);
 
-        $('.barrio').html(html);
-        $(".barrio").attr("disabled", true);
+    $('#' + elemento_activo).find('.barrio').html(html);
+    activar_campo_clase('barrio', true, elemento_activo);
 
+    Pace.track(function () {
         $.ajax({
-            "url": base + 'ubicacion/cantones',
-            "data": {
-                'cod_provincia': cod_provincia
-            },
+            "url": base + 'ubicacion/cantones/' + cod_provincia,
             "dataType": "json",
-            "method": "post"
-        }).done(function(response) {
-            if(response)
-            {
-                for (i = 0; i < response.length; i++) {
-                    html += '<option value="'+ response[i].cod_canton +'">' + response[i].canton + '</option>';
-                }
-
-                $(".canton").attr("disabled", false);
+            "method": "GET"
+        }).done(function (response) {
+            if (response) {
+                //0: {cod_canton:1 , nom_canton: canton}
+                $.each(response, function (i, canton) {
+                    html += crear_option(canton.cod_canton, canton.canton);
+                });
             }
 
-            $('.canton').html(html);
+            $('#' + elemento_activo).find('.canton').html(html);
+            activar_campo_clase('canton', false, elemento_activo);
         });
     });
+}
 
-    //Busqueda de distritos
-    $(".canton").on('change', function() {
-        var cod_provincia = $(".provincia").val();
-        var cod_canton = this.value;
+/**Obtener todos los distritos de un canton 
+ * @param {string} cod_provincia Codigo de la provincia
+ * @param {string} cod_canton Codigo del canton
+*/
+function obtener_distritos(cod_provincia = '', cod_canton = '') {
+    if(cod_provincia == '') {
+        var cod_provincia = $('#' + elemento_activo).find(".provincia").val();
+    }
 
-        var html = '<option value="">Seleccionar</option>';
+    if(cod_canton == '') {
+        var cod_canton = $('#' + elemento_activo).find(".canton").val();
+    }
 
-        $(".distrito").attr("disabled", true);
+    var html = crear_option('', 'Seleccionar');
 
-        $('.barrio').html(html);
-        $(".barrio").attr("disabled", true);
+    $('#' + elemento_activo).find('.barrio').html(html);
+    activar_campo_clase('barrio', true, elemento_activo);
 
+    Pace.track(function () {
         $.ajax({
-            "url": base + 'ubicacion/distritos',
-            "data": {
-                'cod_provincia': cod_provincia,
-                'cod_canton': cod_canton
-            },
+            "url": base + 'ubicacion/distritos/' + cod_provincia + '/' + cod_canton,
             "dataType": "json",
-            "method": "post"
-        }).done(function(response) {
-            if(response)
-            {
-                for (i = 0; i < response.length; i++) {
-                    html += '<option value="'+ response[i].cod_distrito +'">' + response[i].distrito + '</option>';
-                }
-
-                $(".distrito").attr("disabled", false);
+            "method": "GET"
+        }).done(function (response) {
+            if (response) {
+                $.each(response, function (i, distrito) {
+                    html += crear_option(distrito.cod_distrito, distrito.distrito);
+                });
             }
 
-            $('.distrito').html(html);
+            $('#' + elemento_activo).find('.distrito').html(html);
+            activar_campo_clase('distrito', false, elemento_activo);
         });
     });
+}
 
-    //Busqueda de barrios
-    $(".distrito").on('change', function() {
-        var cod_provincia = $(".provincia").val();
-        var cod_canton = $(".canton").val();
-        var cod_distrito = this.value;
+/**Obtener todos los barrios de un distrito */
+function obtener_barrios(cod_provincia = null, cod_canton = null, cod_distrito = null) {
+    if(cod_provincia == null) {
+        var cod_provincia = $('#' + elemento_activo).find(".provincia").val();
+    }
 
-        $(".barrio").attr("disabled", true);
+    if(cod_canton == null) {
+        var cod_canton = $('#' + elemento_activo).find(".canton").val();
+    }
 
-        var html = '<option value="">Seleccionar</option>';
+    if(cod_distrito == null) {
+        var cod_distrito = $('#' + elemento_activo).find(".distrito").val();
+    }
 
+    var html = crear_option('', 'Seleccionar');
+
+    Pace.track(function () {
         $.ajax({
-            "url": base + 'ubicacion/barrios',
-            "data": {
-                'cod_provincia': cod_provincia,
-                'cod_canton': cod_canton,
-                'cod_distrito': cod_distrito,
-            },
+            "url": base + 'ubicacion/barrios/' + cod_provincia + '/' + cod_canton + '/' + cod_distrito,
             "dataType": "json",
-            "method": "post"
-        }).done(function(response) {
-            if(response)
-            {
-                for (i = 0; i < response.length; i++) {
-                    html += '<option value="'+ response[i].id_ubicacion +'">' + response[i].barrio + '</option>';
-                }
-
-                $(".barrio").attr("disabled", false);
+            "method": "GET"
+        }).done(function (response) {
+            if (response) {
+                $.each(response, function (i, barrio) {
+                    html += crear_option(barrio.id_ubicacion, barrio.barrio);
+                });
             }
-            $('.barrio').html(html);
+
+            $('#' + elemento_activo).find('.barrio').html(html);
+            activar_campo_clase('barrio', false, elemento_activo);
         });
     });
-});
+}
 
-function llenarUbicacion(cod_provincia, cod_canton, cod_distrito, id_ubicacion)
-    {
-        var html = '<option value="">Seleccionar</option>';
+/**Llenar la ubicacion */
+function llenarUbicacion(cod_provincia, cod_canton, cod_distrito, id_ubicacion, ver = false) {
+    var html = crear_option('', 'Seleccionar');
 
-        $('.provincia').val(cod_provincia);
+    //Poner el codigo de la provincia
+    $('#' + elemento_activo).find('.provincia').val(cod_provincia);
 
-        $(".canton").attr("disabled", true);
-        
-        $('.distrito').html(html);
-        $(".distrito").attr("disabled", true);
+    $('#' + elemento_activo).find('.canton').html(html);
+    activar_campo_clase('canton', true, elemento_activo);
 
-        $('.barrio').html(html);
-        $(".barrio").attr("disabled", true);
+    $('#' + elemento_activo).find('.distrito').html(html);
+    activar_campo_clase('distrito', true, elemento_activo);
 
-        var html_canton = html;
-        var html_distritos = html;
-        var html_barrios = html;
+    $('#' + elemento_activo).find('.barrio').html(html);
+    activar_campo_clase('barrio', true, elemento_activo);
 
+    var html_canton = html;
+    var html_distritos = html;
+    var html_barrios = html;
+
+    Pace.track(function () {
         $.ajax({
-            "url": base + 'ubicacion/cantones',
-            "data": {
-                'cod_provincia': cod_provincia
-            },
+            "url": base + 'ubicacion/cantones/' + cod_provincia,
             "dataType": "json",
-            "method": "post"
-        }).done(function(cantones) {
-            if(cantones)
-            {
-                for (i = 0; i < cantones.length; i++) {
-                    html_canton += '<option value="'+ cantones[i].cod_canton +'">' + cantones[i].canton + '</option>';
-                }
+            "method": "GET"
+        }).done(function (response) {
+            if (response) {
+                //0: {cod_canton:1 , nom_canton: canton}
+                $.each(response, function (i, canton) {
+                    html_canton += crear_option(canton.cod_canton, canton.canton);
+                });
 
-                $('.canton').html(html_canton);
-                $(".canton").attr("disabled", false);
-                $('.canton').val(cod_canton);
+                $('#' + elemento_activo).find('.canton').html(html_canton);
+                $('#' + elemento_activo).find('.canton').val(cod_canton);
                 
                 $.ajax({
-                    "url": base + 'ubicacion/distritos',
-                    "data": {
-                        'cod_provincia': cod_provincia,
-                        'cod_canton': cod_canton
-                    },
+                    "url": base + 'ubicacion/distritos/' + cod_provincia + '/' + cod_canton,
                     "dataType": "json",
-                    "method": "post"
-                }).done(function(distritos) {
-                    if(distritos)
-                    {
-                        for (i = 0; i < distritos.length; i++) {
-                            html_distritos += '<option value="'+ distritos[i].cod_distrito +'">' + distritos[i].distrito + '</option>';
-                        }
-        
-                        $('.distrito').html(html_distritos);
-                        $(".distrito").attr("disabled", false);
-                        $('.distrito').val(cod_distrito);
+                    "method": "GET"
+                }).done(function (response) {
+                    if (response) {
+                        $.each(response, function (i, distrito) {
+                            html_distritos += crear_option(distrito.cod_distrito, distrito.distrito);
+                        });
+
+                        $('#' + elemento_activo).find('.distrito').html(html_distritos);
+                        $('#' + elemento_activo).find('.distrito').val(cod_distrito);
 
                         $.ajax({
-                            "url": base + 'ubicacion/barrios',
-                            "data": {
-                                'cod_provincia': cod_provincia,
-                                'cod_canton': cod_canton,
-                                'cod_distrito': cod_distrito,
-                            },
+                            "url": base + 'ubicacion/barrios/' + cod_provincia + '/' + cod_canton + '/' + cod_distrito,
                             "dataType": "json",
-                            "method": "post"
-                        }).done(function(barrios) {
-                            if(barrios)
-                            {
-                                for (i = 0; i < barrios.length; i++) {
-                                    html_barrios += '<option value="'+ barrios[i].id_ubicacion +'">' + barrios[i].barrio + '</option>';
-                                }
-                
-                                $('.barrio').html(html_barrios);
-                                $(".barrio").attr("disabled", false);
-                                $('.barrio').val(id_ubicacion);
+                            "method": "GET"
+                        }).done(function (response) {
+                            if (response) {
+                                $.each(response, function (i, barrio) {
+                                    html_barrios += crear_option(barrio.id_ubicacion, barrio.barrio);
+                                });
+
+                                $('#' + elemento_activo).find('.barrio').html(html_barrios);
+                                $('#' + elemento_activo).find('.barrio').val(id_ubicacion);
                             }
                         });
+
+                        if(ver)
+                        {
+                            desactivar_ubicaciones(true, true);
+                        }
+
+                        else
+                        {
+                            desactivar_ubicaciones(false);
+                        }
                     }
                 });
             }
         });
-    }//Fin de la funciion
+    });
+}//Fin de la funcion
 
-    //Reiniciar campos de ubicacion
-    function reiniciarUbicacion()
-    {
-        var html = '<option value="">Seleccionar</option>';
+/**Vaciar los campos de ubicacion */
+function vaciar_ubicacion() {
+    var html = crear_option('', 'Seleccionar');
 
-        $('.provincia').val('');
+    $('#' + elemento_activo).find('.provincia').val('');
 
-        $(".canton").attr("disabled", true);
-        
-        $('.distrito').html(html);
-        $(".distrito").attr("disabled", true);
+    $('#' + elemento_activo).find('.canton').html(html);
+    $('#' + elemento_activo).find('.distrito').html(html);
+    $('#' + elemento_activo).find('.barrio').html(html);
 
-        $('.barrio').html(html);
-        $(".barrio").attr("disabled", true);
-    }
+    desactivar_ubicaciones(true);
+}
+
+/**Desactivar los campos de ubicacion */
+function desactivar_ubicaciones(estado = true, provincia = false) {
+    activar_campo_clase('provincia', provincia, elemento_activo);
+    activar_campo_clase('canton', estado, elemento_activo);
+    activar_campo_clase('distrito', estado, elemento_activo);
+    activar_campo_clase('barrio', estado, elemento_activo);
+}

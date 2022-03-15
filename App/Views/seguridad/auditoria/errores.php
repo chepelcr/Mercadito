@@ -1,14 +1,11 @@
 <!--Card-->
 <div class="card">
     <div class="card-header">
-        <nav class="nav nav-pills flex-column flex-sm-row">
-            <a class="flex-sm-fill text-sm-center nav-link" href="<?=baseUrl('seguridad/errores')?>">Errores</a>
-            <a class="flex-sm-fill text-sm-center nav-link" href="<?=baseUrl('seguridad/auditorias')?>">Auditorias</a>
-        </nav>
+        <?= view('seguridad/auditoria/nav')?>
     </div>
 
-    <div class="card-body">
-        <table class="table table-bordered table-hover text-center" id="listado">
+    <div class="card-body scroll_vertical">
+        <table class="table table-bordered table-hover text-center" id="listado_seguridad_errores">
             <thead>
                 <tr>
                     <th>Fecha del error</th>

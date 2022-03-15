@@ -85,29 +85,7 @@
     <!-- Pace -->
     <script src="<?=getFile('dist/plugins/pace-progress/pace.min.js')?>"></script>
 
-    <script src="<?=getFile('dist/js/base/base.js')?>"></script>
-
-    <script type="text/javascript">
-    $("#frmRecuperar").on('submit', function(e) {
-        e.preventDefault();
-
-        $.ajax({
-            "url": base + "login/recuperar",
-            "method": "post",
-            "data": $('#frmRecuperar').serialize(),
-            "dataType": "json"
-        }).done(function(response) {
-            if (!response.error) {
-                mensajeAutomaticoRecargar('Atencion',
-                    'Se ha enviado la contraseña a su correo electronico',
-                    'info');
-            } //Fin del if
-            else {
-                mensajeAutomatico('Atencion', response.error, 'error');
-            } //Fin del else
-        }); //Fin del ajax
-    }); //Fin del submit
-    </script>
+    <script src="<?=getFile('dist/js/base/login.js')?>"></script>
 </body>
 
 </html>

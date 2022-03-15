@@ -59,30 +59,18 @@
                                 <i class="fas fa-id-card"></i>
                             </span>
                         </div>
-                        <select class="form-select inp perfil" id="tipo_identificacion" name="tipo_identificacion"
+                        <select class="form-select inp perfil" id="id_tipo_identificacion" name="id_tipo_identificacion"
                             required>
                             <option value="">Seleccionar</option>
                             <!-- Nacional o extranjero -->
                             <?php
-                                if(isset($tipo_identificacion)){//nacional, extranjero o juridica
-                                    if($tipo_identificacion == 'N'){
-                                        echo "<option value='N' selected>Nacional</option>";
-                                        echo "<option value='E'>Extranjero</option>";
-                                        echo "<option value='J'>Juridica</option>";
-                                    }else if($tipo_identificacion == 'E'){
-                                        echo "<option value='N'>Nacional</option>";
-                                        echo "<option value='E' selected>Extranjero</option>";
-                                        echo "<option value='J'>Juridica</option>";
-                                    }else if($tipo_identificacion == 'J'){
-                                        echo "<option value='N'>Nacional</option>";
-                                        echo "<option value='E'>Extranjero</option>";
-                                        echo "<option value='J' selected>Juridica</option>";
-                                    }
-                                }else{
-                                    echo "<option value='N'>Nacional</option>";
-                                    echo "<option value='E'>Extranjero</option>";
-                                    echo "<option value='J'>Juridica</option>";
+                            foreach ($identificaciones as $tipo_identificacion) {
+                                echo "<option value='.$tipo_identificacion->id_tipo_identificacion.'";
+                                if (isset($id_tipo_identificacion) && $id_tipo_identificacion == $tipo_identificacion->id_tipo_identificacion) {
+                                    echo " selected";
                                 }
+                                echo ">$tipo_identificacion->tipo_identificacion</option>";
+                            }
                             ?>
                         </select>
                     </div>
@@ -99,9 +87,9 @@
                                 <i class="fas fa-id-card"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control cedula-usuario inp perfil" onblur="verificar()" id="cedula_usuario"
-                            name="cedula_usuario" required placeholder="Identificación"
-                            value="<?php if(isset($cedula_usuario)) echo $cedula_usuario; ?>">
+                        <input type="text" class="form-control inp perfil" onblur="verificar()" id="identificacion"
+                            name="identificacion" required placeholder="Número de identificación"
+                            value="<?php if(isset($identificacion)) echo $identificacion; ?>">
                     </div>
                 </div>
             </div>
@@ -116,12 +104,12 @@
                                 <i class="fas fa-globe-americas"></i>
                             </span>
                         </div>
-                        <select required class="form-select inp" id="id_nacionalidad" name="id_nacionalidad">
+                        <select required class="form-select inp" id="cod_pais" name="cod_pais">
                             <option value="">Seleccione</option>
                             <?php
-                                    foreach ($nacionalidades as $nacionalidad): ?>
+                                    foreach ($codigos as $nacionalidad): ?>
                             <option value="<?php echo $nacionalidad->cod_pais; ?>"
-                                <?php if(isset($id_nacionalidad) && $id_nacionalidad == $nacionalidad->cod_pais) echo 'selected'; ?>>
+                                <?php if(isset($cod_pais) && $cod_pais == $nacionalidad->cod_pais) echo 'selected'; ?>>
                                 <?php echo $nacionalidad->nombre; ?>
                             </option>
                             <?php endforeach; ?>
@@ -157,7 +145,7 @@
                                 <i class="fas fa-venus-mars"></i>
                             </span>
                         </div>
-                        <select required class="form-select inp" id="sexo" name="sexo">
+                        <select required class="form-select inp" id="genero" name="genero">
                             <option value="">Seleccione</option>
                             <option value="F" <?php if(isset($sexo) && $sexo == 'F') echo 'selected'; ?>>
                                 Femenino

@@ -27,65 +27,54 @@ class Correo
             $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
             $mail->Username   = 'proyectojpgrow@gmail.com';                     //SMTP username
-            $mail->Password   = 'vilmacorella12';                               //SMTP password
+            $mail->Password   = 'chpcr1997cr';                               //SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
             $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
             //Recipients
-            $mail->setFrom('proyectojpgrow@gmail.com', 'Jose Pablo Campos');
+            $mail->setFrom('proyectojpgrow@gmail.com', 'Mercadito del Trueque');
 
-            /**
+/**
              * Data para un receptor
              * 
-             * data = 'juan@mail.com';
+             *  $data = array(
+             *      'Juan'=>'juan@mail.com'
+             *  );
              * 
+             * Data para varios repectores
+             *   $data = array(
+             *       'Juan'=>'juan@mail.com',
+             *       'Daniel'=>'daniel@mail.com'
+             *   );
+
+             * $data[receptor]= $data;
+
+             * $mail->addAddress($correo, $nombre);
              * 
-
-            Data para varios repectores
-            data = array(
-                'Juan'=>'juan@mail.com',
-                'Daniel'=>'daniel@mail.com'
-            );
-
-            $data[receptor]= $data;
-
-            $mail->addAddress($correo, $nombre);
-            */
+             */
 
             $receptor = $data->receptor;
 
-            //Receptores al correo
-            if(is_array($receptor))
-            {
-                foreach ($receptor as $nombre => $correo) {
-                    $mail->addAddress($correo, $nombre);
-                }//Fin del ciclo para insertar los receptores
-            }//Fin de la validacion de varios receptores
+            foreach ($receptor as $nombre => $correo) {
+                //pasar nomnbre a string
+                $nombre = (string) $nombre;
 
-            //Si solo es un receptor
-            else{
-                $mail->addAddress($receptor);
-            }//Fin de la validacion
+                $mail->addAddress($correo, $nombre);
+            } //Fin del ciclo para insertar los receptores
 
 
             //Copia de correo
-            if(isset($data->CC))
-            {
+            if (isset($data->CC)) {
                 $CC = $data->CC;
 
                 //Insertar los receptores al correo
-                if(is_array($CC))
-                {
-                    foreach ($CC as $nombre => $correo) {
-                        $mail->addCC($correo, $nombre);
-                    }
-                }//Fin de la validacion de varios CC
+                foreach ($CC as $nombre => $correo) {
+                    //pasar nomnbre a string
+                    $nombre = (string) $nombre;
 
-                //Si solo es un CC
-                else{
-                    $mail->addCC($CC);
-                }//Fin de la validacion
-            }//Fin de la validacion de copia de correo
+                    $mail->addCC($correo, $nombre);
+                }
+            } //Fin de la validacion de copia de correo
 
             //$mail->addBCC('bcc@example.com');
 
@@ -93,24 +82,16 @@ class Correo
              * $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
              */
             //Attachments
-            if(isset($data->adjuntos))
-            {
+            if (isset($data->adjuntos)) {
                 $adjuntos = $data->adjuntos;
+                foreach ($adjuntos as $nombreArchivo => $ubicacion) {
+                    //Pasar nombre de archivo a string
+                    $nombreArchivo = (string) $nombreArchivo;
 
-                //Si son varios archivos
-                if(is_array($adjuntos))
-                {
-                    foreach ($adjuntos as $nombreArchivo => $ubicacion) {
-                        //Insertar los adjuntos
-                        $mail->addAttachment($ubicacion, $nombreArchivo);
-                    }//Fin del ciclo
-                }//Fin de la validacion de varios CC
-
-                //Si solo es un CC
-                else{
-                    $mail->addAttachment($adjuntos);
-                }//Fin de la validacion
-            }//Fin de la validacion de archivos adjuntos
+                    //Insertar los adjuntos
+                    $mail->addAttachment($ubicacion, $nombreArchivo);
+                } //Fin del ciclo
+            } //Fin de la validacion de archivos adjuntos
             
 
             //Content

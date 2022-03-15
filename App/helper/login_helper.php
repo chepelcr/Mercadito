@@ -4,27 +4,12 @@ use App\Librerias\Correo;
 use App\Models\ContraseniaModel;
 use App\Models\UsuariosModel;
 
-/** Validar si el usuario ha iniciado sesion */
+	/** Validar si el usuario ha iniciado sesion */
     function is_login()
     {
 		return getSession();
 		//return true;
     }//Fin de la validacion para el login
-
-	/**Validar si el usuario es administrador */
-	function is_admin()
-	{
-		//return true;
-		
-		if(getSession('id_rol')&&getSession('id_rol')==1)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}//Fin de la validacion para el administrador
 
 	/**Generar una contraseña aleatoriamente */
 	function generar_password_complejo($largo)
@@ -175,13 +160,10 @@ use App\Models\UsuariosModel;
 	/**Enviar una contrasenia temporal a un usuario por correo electronico */
 	function enviar_contrasenia_temporal($usuario)
 	{
-		$pass = 1234;
-		//$pass = generar_password_complejo(8);
+		$pass = generar_password_complejo(8);
 
 		$contraseniaModel = new ContraseniaModel();
-		$contraseniaModel->where('id_usuario', $usuario->id_usuario);
-
-		$contrasenia = $contraseniaModel->fila();
+		$contrasenia = $contraseniaModel->contrasenia($usuario->id_usuario);
 
 		if($contrasenia)
 		{
@@ -209,20 +191,28 @@ use App\Models\UsuariosModel;
 
 		if($id!=0)
 		{
-			$correo = $usuario->correo;
+			$correos = array(
+				$usuario->nombre => $usuario->correo,
+			);
 
 			$mensaje = 'Estimado ' . $usuario->nombre . ',
 			<br>
 			
-			Su clave temporal es <b>' . $pass . '</b>. 
-			Debe realizar el cambio de la misma la primera vez que inicia sesión.
-			
+			Su clave temporal es "<b>'. $pass .'</b>", debe cambiarla la proxima vez que inicie sesión.
 			<br>
 
-			<a role=button href="'.baseUrl('login').'">Iniciar sesion</a>';
+			Presione el siguiente enlace para iniciar sesión:
+			<br>
+			<a href="' . baseUrl('login') . '">Iniciar sesion</a>
+			<br>
+			<br>
+			Saludos,
+			<br>
+			<br>
+			<b>Equipo de Red de Trueque</b>';
 
 			$data = array(
-				'receptor' => $correo,
+				'receptor' => $correos,
 				'asunto' => 'Cambio de contraseña',
 				'body' => $mensaje
 			);
@@ -230,27 +220,87 @@ use App\Models\UsuariosModel;
 			$correo = new Correo();
 
 			if($correo->enviarCorreo($data))
-				return 1;
+				return array('estado' => 1,
+							 'mensaje' => 'Se ha enviado un correo electronico con la nueva contraseña.');
 
 			else
-				return 'Indicar contrasenia manualmente: '.$pass;
+			{
+				//Volver a colocar la contraseña anterior si hay una contraseña ya establecida
+				if($contrasenia)
+				{
+					$data = array(
+						'contrasenia' => $contrasenia->contrasenia,
+						'fecha_expiracion' => $contrasenia->fecha_expiracion
+					);
+
+					$contraseniaModel = new ContraseniaModel();
+					$id = $contraseniaModel->update($data, $contrasenia->id_contrasenia);
+				}//Fin de validacion de contrasenia
+
+				return array('estado' => 0,
+								 'mensaje' => 'No se pudo enviar el correo electronico con la nueva contraseña.');
+			}//Fin de validacion de envio de correo electronico
 		}//Fin de validacion de id
 		
 		else
-			return 'Ha ocurrido un error.';
-	}//Fin del metodo para enviar una contrasenia temporal
+			return array('estado' => 0,
+						 'mensaje' => 'No se ha podido actualizar la contraseña.');
+	}//Fin del metodo para enviar una contrasenia temporal a un usuario
 
-	/**Validar el correo electronico de un usuario */
-	function validarCorreo($correo)
+	/**Obtener el perfil del usuario que ha iniciado sesion */
+	function getPerfil()
 	{
-		$usuarioModel = new UsuariosModel();
-		$usuarioModel->where('correo', $correo);
+		if(is_login())
+		{
+			$usuariosModel = new UsuariosModel();
+			$perfil = $usuariosModel->getPerfil();
 
-		$usuario = $usuarioModel->fila();
+			$datos_personales = array(
+				'nombre' => $perfil->nombre,
+				'identificacion' => $perfil->identificacion,
+				'id_tipo_identificacion' => $perfil->id_tipo_identificacion,
+				'cod_pais' => $perfil->cod_pais,
+				'identificaciones'=>array(
+					(object) array( 
+						'id_tipo_identificacion' => $perfil->id_tipo_identificacion,
+						'tipo_identificacion' => $perfil->tipo_identificacion ),
+				),
+				'codigos'=>
+					array(
+						(object) array( 
+							'cod_pais' => $perfil->cod_pais,
+							'nombre' => $perfil->nombre_pais ),
+					),
+			);
 
-		if($usuario)
-			return true;
+			$datos_contacto = array(
+				'telefono' => $perfil->telefono,
+				'correo' => $perfil->correo,
+			);
 
-		else
-			return false;
-	}//Fin del metodo para validar el correo electronico
+			$datos_usuario = array(
+				'id_organizacion' => $perfil->id_organizacion,
+				'organizaciones' => array(
+					(object) array( 
+						'id_organizacion' => $perfil->id_organizacion, 
+						'nombre' => $perfil->nombre_organizacion),
+				),
+				'id_rol' => $perfil->id_rol,
+				'roles' => array(
+					(object) array( 
+						'id_rol' => $perfil->id_rol, 
+						'nombre_rol' => $perfil->nombre_rol ),
+				),
+			);
+
+			$arrayPerfil = array(
+				'datos_personales' => $datos_personales,
+				'datos_contacto' => $datos_contacto,
+				'datos_usuario' => $datos_usuario,
+			);
+
+			return $arrayPerfil;
+		}
+
+		return false;
+	}//Fin del metodo para obtener el perfil del usuario

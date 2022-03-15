@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercadito del Trueque | Login</title>
+    <title>Red de Trueque | Login</title>
 
     <!-- Bootstrap 5-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -20,14 +20,14 @@
         integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
         crossorigin="anonymous" />
 
-    <!-- Icono del mercadito -->
-    <link rel="shortcut icon" href="<?= getFile('images/logo feria.png')?>" type="image/x-icon">
+    <!-- Pace Style-->
+    <link rel="stylesheet" href="<?= baseUrl('dist/plugins/pace-progress/themes/center-radar.css')?>">
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= getFile('styles/adminlte.min.css')?>">
     <!-- Estilos personalizados-->
     <link rel="stylesheet" href="<?=getFile('styles/estilos.css')?>">
-    <!-- Pace Style-->
-    <link rel="stylesheet" href="<?= baseUrl('dist/plugins/pace-progress/themes/center-radar.css')?>">
+    <!-- Icono del mercadito -->
+    <link rel="shortcut icon" href="<?= getFile('images/logo feria.png')?>" type="image/x-icon">
 </head>
 
 <body class="hold-transition login-page bg-mercadito-claro">
@@ -98,51 +98,7 @@
     <!-- Font-Awesome -->
     <script src="https://kit.fontawesome.com/3e7bda16db.js" crossorigin="anonymous"></script>
 
-    <script src="<?=getFile('dist/js/base/base.js')?>"></script>
-
-    <script type="text/javascript">
-    $("#frmLogin").on('submit', function(e) {
-        e.preventDefault();
-
-        $.ajax({
-            "url": base + "login/consultar",
-            "method": "post",
-            "data": $('#frmLogin').serialize(),
-            "dataType": "json"
-        }).done(function(response) {
-            switch (response.estado) {
-                case '1':
-                    location.reload();
-                break;
-
-                //Si la contrasenia ya expiro
-                case '2':
-                    //Envia mensaje de error al usuario
-                    Swal.fire({
-                        title: 'Atencion',
-                        text: response.error,
-                        icon: 'info',
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then((result) => {
-                        //Redirecciona a la pagina de cambio de contraseña
-                        location.reload();
-                    });
-                break;
-
-                default:
-                    Swal.fire({
-                        title: 'Atencion',
-                        text: response.error,
-                        icon: 'warning',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                break;
-            } //Fin switch
-        }); //Fin del ajax
-    }); //Fin del submit
-    </script>
+    <script src="<?=getFile('dist/js/base/login.js')?>"></script>
 </body>
 
 </html>

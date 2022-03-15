@@ -1,92 +1,361 @@
-/**Transformar una tabla a datatable */
-function crear_data_table(nombre_tabla)
-{
-    $('#'+ nombre_tabla).DataTable({
-        "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-        },
-    });
-}//Fin de la funcion
+/** 
+ * @param {DataTable} table Tabla del listado
+ */
+var table = null;
 
-function campos_activos(estado)
-{
-    $('.inp').attr("readonly", estado);
-    $('.inp').attr("disabled", estado);
+/**
+ * @param {int} fila_actual Fila actual de la tabla
+ */
+var fila_actual = null;
+
+/**
+ * @param {string} url_listado Url del listado
+ */
+var url_listado = '';
+
+/**Cargar el listado en el contenedor
+ * @param {string} modulo Nombre del modulo
+ * @param {string} submodulo Nombre del submodulo
+ * @param {string} url Url del listado
+ */
+function cargar_listado(modulo = '', submodulo = '', url = '') {
+    elemento_activo = '';
+    formato = false;
+    fila_actual = null;
+
+    url_listado = url;
+
+    //desactivar_tooltips();
+
+    if (modulo != '' && submodulo != '') {
+        Pace.track(function () {
+            //Solicitar el submodulo
+            $.ajax({
+                url: url_listado,
+                type: 'GET',
+            }).done(function (respuesta) {
+                if (!respuesta.error) {
+                    cargar_contenido(respuesta, modulo, submodulo);
+                }
+
+                else {
+                    //Mostrar la respuesta
+                    mensajeAutomatico('Atencion', respuesta.error, 'error');
+                }
+            });
+        });
+    }//Fin if
+}//Fin de cargar_listado
+
+/**Cargar contenido en un contenedor o modal 
+ * @param {html} contenido Contenido a cargar
+ * @param {string} modulo Nombre del modulo a cargar
+ * @param {string} submodulo Nombre del submodulo a cargar
+*/
+function cargar_contenido(contenido, modulo, submodulo) {
+    modulo_activo = modulo;
+    submodulo_activo = submodulo;
+
+    //Mostrar la respuesta
+    if (modulo == 'seguridad' && (submodulo == 'errores' || submodulo == 'auditorias')) {
+        //Cerrar todos los modal
+        $('.modal').modal('hide');
+
+        //Vaciar el contenedor de la pagina
+        $('#contenedor').empty();
+
+        //Agregar la respuesta
+        $('#contenedor').append(contenido);
+
+        cargar_modulo('contenedor');
+    }
+
+    else {
+        elemento_activo = 'modal-' + modulo + '-' + submodulo;
+
+        //Vaciar el contenedor del modal
+        $('#' + elemento_activo).find('.contenedor_submodulo').empty();
+
+        //Agregar el contenido al contenedor del modal
+        $('#' + elemento_activo).find('.contenedor_submodulo').append(contenido);
+
+        //Collapse el card-form del modal
+        $('#' + elemento_activo).find('.card-frm').hide();
+
+        //Mostrar el card-table del modal
+        $('#' + elemento_activo).find('.card-table').show();
+
+        //Cerrar todos los modal menos el elemento activo
+        $('.modal').not('#' + elemento_activo).modal('hide');
+
+        //Abrir modal-modulo-submodulo
+        $('#' + elemento_activo).modal('show');
+
+        
+    }
+
+    //activar_modulo_boton(modulo, submodulo);
+
+    poner_titulo(modulo, submodulo);
+
+    //Activar los tooltip
+    //activar_tooltips();
+
+    //Crear la data table
+    crear_data_table('listado_' + modulo + '_' + submodulo);
 }
 
-function vaciar_campos()
-{
-    $('.inp').val("");
+/**Recargar el listado 
+ * @param {string} id_estado Id del reporte a cargar
+*/
+function recargar_listado(id_estado = 'all') {
+    var url = url_listado;
+
+    fila_actual = null;
+
+    Pace.track(function () {
+
+        //Solicitar el submodulo
+        $.ajax({
+            url: url,
+            data: {
+                id_estado: id_estado
+            },
+            type: 'POST',
+        }).done(function (respuesta) {
+            if (!respuesta.error) {
+                cargar_contenido(respuesta, modulo_activo, submodulo_activo);
+            }
+
+            else {
+                //Mostrar la respuesta
+                mensajeAutomatico('Atencion', respuesta.error, 'error');
+            }
+        });
+    });
+}//Fin de recargar_listado
+
+
+/**Transformar una tabla a datatable
+ * @param {string} nombre_tabla Nombre de la tabla
+ */
+function crear_data_table(nombre_tabla) {
+    desactivar_tooltips_tabla();
+
+    nombre_tabla = '#' + nombre_tabla;
+
+    //Validar que el elemento exista y sea una tabla
+    if ($(nombre_tabla).length > 0 && $(nombre_tabla).is('table')) {
+        //Si la tabla es DataTable
+        if ($(nombre_tabla).hasClass('dataTable')) {
+            //Destruir la tabla
+            $(nombre_tabla).DataTable().destroy();
+
+            table = null;
+        }
+
+        if (submodulo_activo == 'auditorias' || submodulo_activo == 'errores') {
+            //Crea la data table ordenando por el primer campo desc
+            table = $(nombre_tabla).DataTable({
+                paging: true,
+                //Solo se permiten 10 registros por pagina
+                pageLength: 10,
+                //No se puede cabiar el numero de registros por pagina
+                lengthChange: false,
+                info: false,
+                searching: true,
+                ordering: true,
+                order: [[0, 'desc']],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.11.4/i18n/es-mx.json",
+                },
+                select: {
+                    style: 'api'
+                },
+            });
+        }
+
+        else {
+            //Crea la data table ordenando por el segundo campo
+            table = $(nombre_tabla).DataTable({
+                paging: true,
+                //Solo se permiten 10 registros por pagina
+                pageLength: 10,
+                //No se puede cabiar el numero de registros por pagina
+                lengthChange: false,
+                info: false,
+                searching: true,
+                ordering: true,
+                order: [[1, 'asc']],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.11.4/i18n/es-mx.json",
+                },
+                select: {
+                    style: 'api'
+                },
+            });
+        }
+
+        activar_tooltip_tabla();
+    }
+}//Fin de la funcion
+
+/**Enfocar la siguiente fila de la tabla que esta en la pantalla */
+function siguiente_elemento() {
+    var tabla = table;
+
+    if (tabla != null) {
+        //Obtener la fila actual
+        var fila = fila_actual;
+
+        if (fila != null) {
+            var fila_siguiente = fila + 1;
+
+            if (fila_siguiente < tabla.rows().count()) {
+                //Seleccionar la fila siguiente
+                tabla.row(fila_siguiente).select();
+
+                //Si la fila siguiente es un multiplo de 10, pasar a la siguiente pagina
+                if (fila_siguiente % 10 == 0) {
+                    tabla.page('next').draw(false);
+                }
+
+                fila_actual = tabla.row('.selected').index();
+
+                //Deseleccionar la fila actual
+                tabla.row(fila_actual).deselect();
+
+                enfocar_fila_actual();
+            }
+        }
+
+        else {
+            tabla.row(0).select();
+
+            fila_actual = tabla.row('.selected').index();
+
+            //Deseleccionar la fila actual
+            tabla.row(fila_actual).deselect();
+
+            enfocar_fila_actual();
+        }
+    }
 }
 
-/**Lenar un formulario con la informacion enviada */
-function llenarFrm(objeto, titulo)
-{
-    if (objeto) {
-        $.each(objeto, function(key, valor) {
-            $("#" + key).val(valor)
+/**Enfocar el elemento anterior */
+function elemento_anterior() {
+    var tabla = table;
+
+    if (tabla != null) {
+        //Obtener la fila actual
+        var fila = fila_actual;
+
+        if (fila != null) {
+            var fila_anterior = fila - 1;
+
+            if (fila_anterior >= 0) {
+                //Enfocar la fila anterior
+                tabla.row(fila_anterior).select();
+
+                //Si la fila anterior es un multiplo de 10, pasar a la pagina anterior
+                if ((fila_anterior + 1) % 10 == 0) {
+                    tabla.page('previous').draw(false);
+                }
+
+                fila_actual = tabla.row('.selected').index();
+
+                //Deseleccionar la fila actual
+                tabla.row(fila_actual).deselect();
+
+                enfocar_fila_actual();
+            }
+        }
+
+        else {
+            tabla.row(0).select();
+
+            fila_actual = tabla.row('.selected').index();
+
+            //Deseleccionar la fila actual
+            tabla.row(fila_actual).deselect();
+
+            enfocar_fila_actual();
+        }
+    }
+}
+
+/**Activar los tooltip de todas las filas de la tabla */
+function activar_tooltip_tabla() {
+    //Obtener la tabla
+    var tabla = table;
+
+    if (tabla != null) {
+        //Recorrer cada nodo de la tabla
+        tabla.rows().every(function (rowIdx, tableLoop, rowLoop) {
+            //Activar los tooltip que se encuentren en la fila
+            $(this.node()).find('[data-toggle="tooltip"]').tooltip();
         });
+    }
+}
 
-        $(".titulo-form").html(titulo);
+/**Desactivar los tooltip de todas las filas */
+function desactivar_tooltips_tabla() {
+    //Obtener la tabla
+    var tabla = table;
 
-        $('.btt-mod').show();
-        $('.btt-edt').hide();
-        $('.btt-grd').hide();
-
-        campos_activos(false);
-
-        //Mostrar el modal
-        $('#modalAccion').modal('show');
-    }//Fin de la validacion
-}//Fin de la funcion
-
-function verFrm(objeto, titulo)
-{
-    if (objeto) {
-        $.each(objeto, function(key, valor) {
-            $("#" + key).val(valor);
+    if (tabla != null) {
+        //Recorrer cada nodo de la tabla
+        tabla.rows().every(function (rowIdx, tableLoop, rowLoop) {
+            //Desactivar los tooltip que se encuentren en la fila
+            $(this.node()).find('[data-toggle="tooltip"]').tooltip('dispose');
         });
+    }
+}
 
-        campos_activos(true);
-        
-        $(".titulo-form").html(titulo);
+/**Enfocar la fila en la que el mouse esta, o por medio de las flechas */
+function enfocar_fila_actual() {
+    var fila = fila_actual;
 
-        //Mostrar el modal del usuario
-        $('#modalAccion').modal('show');
+    //Eliminar color de fondo gris de todas las filas
+    $(table.rows().nodes()).removeClass('bg-gradient-gray').removeClass('text-white');
 
-        $('.btt-mod').hide();
-        $('.btt-edt').show();
-        $('.btt-grd').hide();
-    }//Fin de la validacion
-}//Fin de la funcion
+    //Poner color de fondo gris claro a la fila actual
+    $(table.row(fila).node()).addClass('bg-gradient-gray').addClass('text-white');
 
-$(document).ready(function(){
-    crear_data_table('listado');
+    if (submodulo_activo != 'auditorias' && submodulo_activo != 'errores') {
+        //Poner el foco en btn-ver de la fila
+        $(table.row(fila).node()).find('.btn-ver').focus();
+    }
+}
 
-    //Editar un usuario
-    $(document).on('click', '.btt-edt', function (e) {
-        $('.btt-edt').hide();
-        $('.btt-mod').show();
+/**Encontrar elementos que coincidan en la tabla solicitada */
+function filtrar_tabla(id_tabla, filtro) {
+    if (filtro != '') {
+        $("#" + id_tabla + " tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(filtro) > -1)
+        });
+    }
+    else {
+        $("#" + id_tabla + " tr").show();
 
-        campos_activos(false);
-    });//Fin de editar un usuario
+        $("#" + id_tabla + " tr").each(function (index, value) {
+            $(this).show();
+        });
+    }
+}
 
-    //Mostrar el modal para agregar o modificar un objeto
-    $(document).on('click', '#btnAgregar', function() {
+/**Cuando el documento esta listo */
+$(document).ready(function () {
+    /** Cuando el mouse entra en una fila de la tabla */
+    $(document).on('mouseenter', '.dataTables_wrapper tbody tr', function () {
+        //Seleccionar la fila
+        table.row(this).select();
 
-        $('.btt-mod').hide();
-        $('.btt-edt').hide();
-        $('.btt-grd').show();
+        fila_actual = table.row(this).index();
 
-        vaciar_campos();
-        campos_activos(false);
-        
-        $('#modalAccion').modal('show');
-    });
+        //Deseleccionar la fila actual
+        table.row(fila_actual).deselect();
 
-    //Cuando se cierra el modal de acciones
-    $('#modalAccion').on('hidden.bs.modal', function() {
-        vaciar_campos();
-        campos_activos(true);
+        enfocar_fila_actual();
     });
 });

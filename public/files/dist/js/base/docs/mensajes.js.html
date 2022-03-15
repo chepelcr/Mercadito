@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: mensajes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: mensajes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**Enviar un mensaje al usuario
+ * @param titulo Titulo del mensaje
+ * @param mensaje Mensaje del mensaje
+ * @param icono Icono del mensaje
+*/
+function mensaje(titulo, mensaje, icono = 'info') {
+    Swal.fire({
+        icon: icono,
+        title: titulo,
+        text: mensaje,
+        showConfirmButton: true,
+        confirmButtonText: 'Aceptar',
+    })
+}//Fin del mensaje
+
+/**Mensaje que se cierra automaticamente
+ * @param titulo Titulo del mensaje
+ * @param mensaje Mensaje del mensaje
+ * @param icono Icono del mensaje
+ * @param timer Tiempo que se muestra el mensaje
+*/
+function mensajeAutomatico(titulo, mensaje, icono = 'info', timer = 2500) {
+    Swal.fire({
+        title: titulo,
+        text: mensaje,
+        icon: icono,
+        timer: timer,
+        showConfirmButton: false,
+    })//Fin del mensaje
+}//Fin del mensaje
+
+/**Mensaje que se cierra automaticamente y recarga la pagina
+ * @param titulo Titulo del mensaje
+ * @param mensaje Mensaje del mensaje
+ * @param icono Icono del mensaje
+ * @param timer Tiempo que se muestra el mensaje
+*/
+function mensajeAutomaticoRecargar(titulo, mensaje, icono = 'info', timer = 2500) {
+    Swal.fire({
+        title: titulo,
+        text: mensaje,
+        icon: icono,
+        timer: 2000,
+        showConfirmButton: false,
+    }).then((result) => {
+        location.reload();
+    })//Fin del mensaje
+}//Fin del mensaje
+
+/**Mensaje que realiza una accion luego de mostrarse
+ * @param titulo Titulo del mensaje
+ * @param mensaje Mensaje del mensaje
+ * @param icono Icono del mensaje
+ * @param accion Funcion que se ejecuta al mostrarse el mensaje
+ */
+function mensajeAutomaticoAccion(titulo, mensaje, icono = 'info', accion = function() { }) {
+    Swal.fire({
+        title: titulo,
+        text: mensaje,
+        icon: icono,
+        timer: 2000,
+        showConfirmButton: false,
+    }).then((result) => {
+        accion();
+    })//Fin del mensaje
+}//Fin del mensaje</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#abrir_modal">abrir_modal</a></li><li><a href="global.html#abrir_perfil">abrir_perfil</a></li><li><a href="global.html#activar_modulo_boton">activar_modulo_boton</a></li><li><a href="global.html#activar_tooltip_tabla">activar_tooltip_tabla</a></li><li><a href="global.html#activar_tooltips">activar_tooltips</a></li><li><a href="global.html#base">base</a></li><li><a href="global.html#cargar_contenido">cargar_contenido</a></li><li><a href="global.html#cargar_inicio">cargar_inicio</a></li><li><a href="global.html#cargar_inicio_modulo">cargar_inicio_modulo</a></li><li><a href="global.html#cargar_listado">cargar_listado</a></li><li><a href="global.html#cargar_modulo">cargar_modulo</a></li><li><a href="global.html#cerrar_modal">cerrar_modal</a></li><li><a href="global.html#crear_data_table">crear_data_table</a></li><li><a href="global.html#desactivar_tooltips">desactivar_tooltips</a></li><li><a href="global.html#desactivar_tooltips_tabla">desactivar_tooltips_tabla</a></li><li><a href="global.html#desactivar_ubicaciones">desactivar_ubicaciones</a></li><li><a href="global.html#elemento_activo">elemento_activo</a></li><li><a href="global.html#elemento_anterior">elemento_anterior</a></li><li><a href="global.html#enfocar_fila_actual">enfocar_fila_actual</a></li><li><a href="global.html#fila_actual">fila_actual</a></li><li><a href="global.html#filtrar_tabla">filtrar_tabla</a></li><li><a href="global.html#formatear_cedula">formatear_cedula</a></li><li><a href="global.html#llenarUbicacion">llenarUbicacion</a></li><li><a href="global.html#loading">loading</a></li><li><a href="global.html#mensaje">mensaje</a></li><li><a href="global.html#mensajeAutomatico">mensajeAutomatico</a></li><li><a href="global.html#mensajeAutomaticoAccion">mensajeAutomaticoAccion</a></li><li><a href="global.html#mensajeAutomaticoRecargar">mensajeAutomaticoRecargar</a></li><li><a href="global.html#modal_activo">modal_activo</a></li><li><a href="global.html#modulo_activo">modulo_activo</a></li><li><a href="global.html#obtener_barrios">obtener_barrios</a></li><li><a href="global.html#obtener_cantones">obtener_cantones</a></li><li><a href="global.html#obtener_contribuyente">obtener_contribuyente</a></li><li><a href="global.html#obtener_distritos">obtener_distritos</a></li><li><a href="global.html#obtener_tipo_cambio">obtener_tipo_cambio</a></li><li><a href="global.html#ocultar_contenedores">ocultar_contenedores</a></li><li><a href="global.html#poner_titulo">poner_titulo</a></li><li><a href="global.html#recargar_listado">recargar_listado</a></li><li><a href="global.html#salir">salir</a></li><li><a href="global.html#siguiente_elemento">siguiente_elemento</a></li><li><a href="global.html#submodulo_activo">submodulo_activo</a></li><li><a href="global.html#table">table</a></li><li><a href="global.html#url_listado">url_listado</a></li><li><a href="global.html#vaciar_ubicacion">vaciar_ubicacion</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Mar 15 2022 14:28:24 GMT-0600 (hora estándar central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

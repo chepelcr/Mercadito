@@ -8,6 +8,8 @@ use Core\Model;
 class UsuariosModel extends Model
 {
 	protected $nombreTabla = 'usuarios';
+	protected $vistaTabla = 'usuarios_view';
+
 	protected $pk_tabla = 'id_usuario';
 
 	protected $dbGroup = 'seguridad';
@@ -15,13 +17,14 @@ class UsuariosModel extends Model
 	protected $camposTabla = [
 		'nombre',
 		'apellidos',
-		'tipo_identificacion',
-		'cedula_usuario',
-		'sexo',
+		'id_tipo_identificacion',
+		'identificacion',
+		'genero',
 		'correo',
 		'telefono',
-		'id_nacionalidad',
+		'cod_pais',
 		'id_rol',
+		'id_organizacion',
 		'id_ubicacion',
 		'otras_senias',
 		'fecha_nacimiento',
@@ -30,6 +33,14 @@ class UsuariosModel extends Model
 		'fecha_eliminacion',
 		'estado',
 	];
+
+	protected $camposVista = [
+        'tipo_identificacion',
+        'codigo_telefono',
+        'nombre_pais',
+		'nombre_organizacion',
+		'nombre_rol',
+    ];
 
 	protected $autoIncrement = true;
 
@@ -41,10 +52,9 @@ class UsuariosModel extends Model
 		return $this->where('id_rol', 1)->getAll();
 	}//Fin de la función getAll
 
-	//Obtener un usuario con rol 1, por su id
-	public function getById($id)
+	public function getPerfil()
 	{
-		return $this->where('id_rol', 1)->where('id_usuario', $id)->fila();
-	}//Fin de la función getById
+		return $this->getById('2');
+	}
 }//Fin de la clase
 ?>

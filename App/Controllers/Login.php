@@ -102,7 +102,9 @@ class Login extends BaseController
 		{
 			destroy();
 
-			return redirect(baseUrl());
+			return json_encode(array(
+				'estado' => '1',
+			));
 		}//Fin de la funcion
 
 
@@ -111,7 +113,7 @@ class Login extends BaseController
 				return view('seguridad/login/olvido');
 
 			else
-				return redirect(baseUrl('punto'));
+				return redirect(baseUrl());
 		}//Fin de la funcion
 
 		/**Recuperar la contrasenia de un usuario */
@@ -132,31 +134,31 @@ class Login extends BaseController
 					//Si el usuario existe inserte la data
 					if($usuario)
 					{
-						$estado = enviar_contrasenia_temporal($usuario);
-
-						if($estado != 1)
-						{
-							return json_encode(array(
-								'error' => $estado));
-						}
-						else
-						{
-							return json_encode(array(
-								'estado' => 1
-							));
-						}
+						return json_encode(enviar_contrasenia_temporal($usuario));
 					}//Fin de la validacion del usuario
 
-					return json_encode(array(
-						'error' => 'El correo no existe.'));
+					return json_encode(
+						array(
+							'estado' => '0',
+							'error' => 'El correo no existe.'
+						)
+					);
 				}//Fin de la validacion
-				
-				return json_encode(array(
-					'error' => 'No ha indicado un correo.'
-				));
+
+				return json_encode(
+					array(
+						'estado' => '0',
+						'error' => 'No se ha ingresado el correo.'
+					)
+				);
 			}//Fin de la validacion de logueo
 
-			return redirect(baseUrl());
+			return json_encode(
+				array(
+					'estado' => '0',
+					'error' => 'Ya ha iniciado sesión.'
+				)
+			);
 		}//Fin del metodo para recuperar la contrasenia
 	}//Fin del controlador de login
 

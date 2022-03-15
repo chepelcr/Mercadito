@@ -5,10 +5,14 @@ namespace App\Controllers;
 use App\Librerias\Correo;
 use App\Models\CodigosPaisesModel;
 use App\Models\ParticipantesModel;
+use App\Models\RolesModel;
+use App\Models\TipoIdentificacionModel;
 use App\Models\UbicacionesModel;
 use App\Models\UsuariosModel;
 use Core\Auditorias\AuditoriaModel;
 use Core\Auditorias\ErroresModel;
+use Core\Permisos\PermisosModel;
+use Core\Permisos\SubmodulosAccionesModel;
 
 /**
  * Descripción: Controlador para la entidad usuario
@@ -19,7 +23,7 @@ class Seguridad extends BaseController
 
 	protected $nombre_modulo = 'seguridad';
 
-	protected $objetos = ['usuarios', 'participantes'];
+	protected $objetos = ['usuarios', 'roles'];
 
 	protected $campos_validacion = array(
 		'usuarios' => 'cedula_usuario',
@@ -29,6 +33,235 @@ class Seguridad extends BaseController
 		'usuarios' => true,
 	);
 
+	/**Modulo de inicio de seguridad */
+	public function index()
+	{
+		if (is_login()) {
+			$script = '<script>
+                $(document).ready(function(){
+                    cargar_inicio_modulo("seguridad");
+                });
+            </script>';
+
+			$data = array(
+				'script' => $script,
+			);
+
+			return $this->inicio($data);
+		} //Fin de la validacion
+
+		else
+			header('Location: ' . baseUrl('login'));
+	} //Fin de la funcion index
+
+	/**Ontener todos los usuarios del sistema */
+	public function usuarios()
+	{
+		if (!is_login()) {
+			header('Location: ' . baseUrl('login'));
+		}
+
+		if (!validar_permiso('seguridad', 'usuarios', 'consultar')) {
+			$error = $this->object_error(403, 'No tiene permiso para realizar esta acción');
+
+			return  $this->error($error);
+		}
+
+		switch (getsegment(3)) {
+			case 'listado':
+				$usuariosModel = new UsuariosModel();
+				$usuarios = $usuariosModel->getAll();
+
+				$nombreTabla = 'seguridad/usuario/table';
+
+				$data_tabla = array(
+					'nombreTable' => $nombreTabla,
+					'nombre_tabla' => 'listado_seguridad_usuarios',
+					'dataTable' => array(
+						'usuarios' => $usuarios
+					)
+				);
+
+				$tiposIdentificacionMoodel = new TipoIdentificacionModel();
+				$identificaciones = $tiposIdentificacionMoodel->getAll();
+
+				$codigosPaisesModel = new CodigosPaisesModel();
+				$codigos = $codigosPaisesModel->getAll();
+
+				$datos_personales = array(
+					'identificaciones' => $identificaciones,
+					'codigos' => $codigos
+				);
+
+				$rolesModel = new RolesModel();
+				$organizacionesModel = model('organizaciones');
+
+				$datos_usuario = array(
+					'organizaciones' => $organizacionesModel->getAll(),
+					'roles' => $rolesModel->getAll(),
+				);
+
+				$nombreForm = 'seguridad/usuario/form';
+
+				$data_form = array(
+					'dataForm' => array(
+						'datos_personales' => $datos_personales,
+						'datos_usuario' => $datos_usuario
+					),
+					'nombreForm' => $nombreForm,
+					'nombre_form' => 'frm_seguridad_usuarios'
+				);
+
+				$data = array(
+					'data_tabla' => $data_tabla,
+					'data_form' => $data_form,
+				);
+
+				return $this->listado($data);
+				break;
+
+			default:
+				$data = array(
+					'script' => "<script>
+									$(document).ready(function(){
+										cargar_listado('seguridad', 'usuarios', '" . baseUrl('seguridad/usuarios/listado') . "');
+									});
+								</script>"
+				);
+
+				return $this->inicio($data);
+				break;
+		} //Fin del switch
+	} //Fin de la funcion para retornar los usuarios del sistema
+
+	/**Obtener todos los roles del sistema */
+	public function roles()
+	{
+		if (!is_login()) {
+			header('Location: ' . baseUrl('login'));
+		}
+
+		if (!validar_permiso('seguridad', 'roles', 'consultar')) {
+			$error = $this->object_error(403, 'No tiene permiso para realizar esta acción');
+
+			return  $this->error($error);
+		}
+
+		switch (getsegment(3)) {
+			case 'listado':
+				$rolesModel = new RolesModel();
+				$roles = $rolesModel->getAll();
+
+				$nombreTabla = 'seguridad/rol/table';
+
+				$data_tabla = array(
+					'nombreTable' => $nombreTabla,
+					'nombre_tabla' => 'listado_seguridad_roles',
+					'dataTable' => array(
+						'roles' => $roles
+					)
+				);
+
+				$nombreForm = 'seguridad/rol/form';
+
+				$submodulosAccionesModel = new SubmodulosAccionesModel();
+
+				$dataForm = array(
+					'modulos' => $submodulosAccionesModel->modulos(),
+				);
+
+				$data_form = array(
+					'dataForm' => $dataForm,
+					'nombreForm' => $nombreForm,
+					'nombre_form' => 'frm_seguridad_roles'
+				);
+
+				$data = array(
+					'data_tabla' => $data_tabla,
+					'data_form' => $data_form,
+				);
+
+				return $this->listado($data);
+				break;
+
+			default:
+				$data = array(
+					'script' => "<script>
+										$(document).ready(function(){
+											cargar_listado('seguridad', 'roles', '" . baseUrl('seguridad/roles/listado') . "');
+										});
+									</script>"
+				);
+
+				return $this->inicio($data);
+				break;
+		} //Fin del switch
+	} //Fin de la funcion
+
+	/**Mostrar las acciones de la base de datos */
+	public function auditorias()
+	{
+		if (is_login()) {
+			if (getSegment(3) == 'listado') {
+				$auditoriaModel = new AuditoriaModel();
+
+				$dataView = array(
+					'auditorias' => $auditoriaModel->getAll(),
+				);
+
+				return view('seguridad/auditoria/listado', $dataView);
+			} else {
+				$data = array(
+					'script' => '<script>
+						$(document).ready(function(){
+							cargar_listado("seguridad", "auditorias", "' . baseUrl('seguridad/auditorias/listado') . '");
+						});
+					</script>'
+				);
+
+				return $this->inicio($data);
+			}
+		} //Fin de la validacion
+
+		else {
+			header('Location: ' . baseUrl('login'));
+		}
+	} //Fin de la funcion para mostrar el listado de auditorias
+
+	/**Obtener los errores del sistema */
+	public function errores()
+	{
+		if (getSegment(3) == 'listado') {
+			if (!is_login()) {
+				return $this->error($this->object_error(505, 'No ha iniciado sesión'));
+			} else {
+				$erroresModel = new ErroresModel();
+
+				$errores = $erroresModel->getAll();
+
+				$dataView = array(
+					'errores' => $errores,
+				);
+
+				return view('seguridad/auditoria/errores', $dataView);
+			}
+		} else {
+			if (!is_login()) {
+				header('Location: ' . baseUrl('login'));
+			}
+
+			$data = array(
+				'script' => '<script>
+						$(document).ready(function(){
+							cargar_listado("seguridad", "errores", "' . baseUrl('seguridad/errores/listado') . '");
+						});
+					</script>'
+			);
+
+			return $this->inicio($data);
+		}
+	} //Fin de la funcion para mostrar todos los errores
+
 	/**Guardar un objeto en la base de datos */
 	public function guardar($objeto = null)
 	{
@@ -37,83 +270,115 @@ class Seguridad extends BaseController
 				switch ($objeto) {
 					case 'usuarios':
 						//Validar el permiso de acceso
-						if (is_admin()) {
-							if ($this->validarUsuario(post('cedula_usuario'))) {
-								return json_encode(array(
-									'error' => 'El usuario indicado ya se encuentra registrado',
-								));
-							} //Fin de validacion de cedula
+						if (validar_permiso('seguridad', 'usuarios', 'insertar')) {
+							$identificacion = post('identificacion');
 
-							else {
-								$model = $this->model('usuarios');
+							//Eliminar los guiónes del número de identificación
+							$identificacion = desformatear_cedula($identificacion);
 
-								$pass = generar_password_complejo(10);
-								//$pass = 1234;
+							$correo = post('correo');
 
-								$data = array(
-									'nombre' => post('nombre'),
-									'apellidos' => post('apellidos'),
-									'tipo_identificacion' => post('tipo_identificacion'),
-									'cedula_usuario' => post('cedula_usuario'),
-									'sexo' => post('sexo'),
-									'correo' => post('correo'),
-									'telefono' => post('telefono'),
-									'id_nacionalidad' => post('id_nacionalidad'),
-									'id_rol' => 1,
-									'fecha_nacimiento' => post('fecha_nacimiento'),
-									'estado' => 1,
-								);
+							$model = model('usuarios');
+							$model->where('correo', $correo);
 
-								$id = $model->insert($data);
+							if (!$model->fila()) {
+								$model = model('usuarios');
+								$model->where('identificacion', $identificacion);
+								if (!$model->fila()) {
+									$model = model('usuarios');
 
-								if ($id != 0) {
-									$data_pass = array(
-										'id_usuario' => $id,
-										'contrasenia' => encriptar_texto($pass),
-										'fecha_expiracion' => date('Y-m-d H:i:s'),
-										'estado' => 1
+									$data = array(
+										'nombre' => post('nombre'),
+										'apellidos' => post('apellidos'),
+										'tipo_identificacion' => post('tipo_identificacion'),
+										'cedula_usuario' => post('cedula_usuario'),
+										'sexo' => post('sexo'),
+										'correo' => post('correo'),
+										'telefono' => post('telefono'),
+										'id_nacionalidad' => post('id_nacionalidad'),
+										'id_rol' => 1,
+										'fecha_nacimiento' => post('fecha_nacimiento'),
+										'estado' => 1,
 									);
 
-									$model = $this->model('contrasenia');
+									$id = $model->insert($data);
 
-									$id_contrasenia = $model->insert($data_pass);
+									if ($id) {
+										$pass = generar_password_complejo(10);
 
-									//Si el id de la contraseña es mayor a cero, se envia el correo
-									if ($id_contrasenia != 0) {
-										$mensaje = 'Estimado ' . post('nombre') . ' ' . post('apellidos') . '<br><br>
-											
-											Se ha completado su registro en la plataforma del Mercadito de Trueque. <br> Su usuario es <b>' . post('correo') . '</b> y su contraseña es <b>' . $pass . '</b>. 
-											Debe realizar el cambio de la contraseña la primera vez que inicia sesión.';
-
-										$data = array(
-											'receptor' => post('correo'),
-											'asunto' => 'Registro de usuario',
-											'body' => $mensaje
+										$data_pass = array(
+											'id_usuario' => $id,
+											'contrasenia' => encriptar_texto($pass),
+											'fecha_expiracion' => date('Y-m-d H:i:s'),
+											'estado' => 1
 										);
 
-										$correo = new Correo();
+										$model = model('contrasenia');
 
-										if ($correo->enviarCorreo($data))
-											return json_encode(array(
-												'success' => 'El usuario se ha registrado correctamente',
-											));
+										$id_contrasenia = $model->insert($data_pass);
+
+										//Si el id de la contraseña es mayor a cero, se envia el correo
+										if ($id_contrasenia) {
+											//Estimado, Estimada, Estimade
+											if (post('sexo') == 'M')
+												$genero = 'Estimado';
+											elseif (post('sexo') == 'F')
+												$genero = 'Estimada';
+											else
+												$genero = 'Estimade';
+
+											$mensaje = $genero . post('nombre') . ' ' . post('apellidos') . '<br><br>
+											
+											Se ha completado su registro en la plataforma del Mercadito de Trueque, debe cambiar la contraseña la primera vez que inicia sesión.
+											<br>
+													<br>
+													Usuario: <b>' . post('correo') . '</b> <br>
+													Contraseña: <b>' . $pass . '</b> <br>
+													<br>
+													<br>
+
+													Presione el siguiente enlace para iniciar sesión: <br>
+													<a href="' . baseUrl() . '">Iniciar</a>
+													
+													Saludos,
+													<br>
+													<br>
+													<b>Equipo de Modas Laura</b>';
+
+											$correos = array(
+												post('nombre') => post('correo')
+											);
+
+											$data = array(
+												'receptor' => $correos,
+												'asunto' => 'Registro de usuario',
+												'body' => $mensaje
+											);
+
+											$correo = new Correo();
+
+											if ($correo->enviarCorreo($data))
+												return json_encode(array(
+													'success' => 'El usuario se ha registrado correctamente',
+												));
+											else
+												return json_encode(array(
+													'error' => 'No se pudo enviar el correo, debe indicar contraseña manualmente: ' + $pass,
+												));
+										} //Fin de validacion de id_contrasenia
+
 										else
 											return json_encode(array(
-												'error' => 'No se pudo enviar el correo, debe indicar contraseña manualmente: ' + $pass,
+												'error' => 'No se pudo guardar la contraseña.',
 											));
-									} //Fin de validacion de id_contrasenia
+									} //Fin de validacion de id
 
 									else
 										return json_encode(array(
-											'error' => 'No se pudo guardar la contraseña.',
+											'error' => 'No se pudo guardar el usuario.',
 										));
-								} //Fin de validacion de id
-
-								else
-									return json_encode(array(
-										'error' => 'No se pudo guardar el usuario.',
-									));
-							} //Fin de validacion de cedula
+								} //Fin de validacion de cedula
+							} //Fin de validacion de correo
 						} //Fin de validacion de permiso
 
 						else
@@ -122,110 +387,69 @@ class Seguridad extends BaseController
 							));
 						break;
 
-						//Participantes
-						case 'participantes':
-							if ($this->validarParticipante(post('cedula_usuario'))) {
-								return json_encode(array(
-									'error' => 'La cedula indicada ya se encuentra en uso.',
-								));
-							} //Fin de validacion de cedula
-		
-							elseif (!validarCorreo(post('correo'))) {
-								$model = $this->model('participantes');
-		
-								$pass = generar_password_complejo(10);
-								//$pass = 1234;
-		
-								$data = array(
-									'nombre' => post('nombre'),
-									'apellidos' => post('apellidos'),
-									'tipo_identificacion' => post('tipo_identificacion'),
-									'cedula_usuario' => post('cedula_usuario'),
-									'sexo' => post('sexo'),
-									'correo' => post('correo'),
-									'telefono' => post('telefono'),
-									'id_nacionalidad' => post('id_nacionalidad'),
-									'id_rol' => 2,
-									'id_ubicacion' => post('id_ubicacion'),
-									'otras_senias' => post('otras_senias'),
-									'fecha_nacimiento' => post('fecha_nacimiento'),
-									'estado' => 2,
-								);
-		
-								$id = $model->insert($data);
-		
-								if ($id != 0) {
-									$data_pass = array(
-										'id_usuario' => $id,
-										'contrasenia' => encriptar_texto($pass),
-										'fecha_expiracion' => date('Y-m-d H:i:s'),
-										'estado' => 1
-									);
-		
-									$model = $this->model('contrasenia');
-		
-									$id_contrasenia = $model->insert($data_pass);
-		
-									//Si el id de la contraseña es mayor a cero, se envia el correo
-									if ($id_contrasenia != 0) {
-										//Vlidar el genero del participante
-										//Estimado, Estimada, Estimade
-										if(post('sexo') == 'M')
-											$genero = 'Estimado';
-										elseif(post('sexo') == 'F')
-											$genero = 'Estimada';
-										else
-											$genero = 'Estimade';
-		
-										$mensaje = $genero.' ' . post('nombre') . ' ' . post('apellidos') . '<br><br>
-													
-													Se ha completado su registro en la plataforma del Mercadito de Trueque. <br> 
-													Para completar su registro, debe subir una copia de su documento de identidad y una foto de su perfil. <br>
-		
-													Su usuario es el siguiente: <br>
-													Usuario: ' . post('correo') . ' <br>
-													Contraseña: ' . $pass . ' <br> <br>
-		
-													Para ingresar al sistema, debe hacer click en el siguiente enlace: <br>
-													<a href:"' . baseUrl('login') . '">Mercadito del Trueque</a> <br> <br>';
-		
+					case 'roles':
+						$model = model('roles');
+
+						$data = array(
+							'nombre_rol' => post('nombre_rol'),
+						);
+
+						$id = $model->insert($data);
+
+						if ($id != 0) {
+							$submodulos_acciones_model = new SubmodulosAccionesModel();
+
+							$modulos = $submodulos_acciones_model->modulos();
+
+							//Recorrer modulos
+							foreach ($modulos as $modulo) {
+								$nombre_modulo = $modulo->nombre_modulo;
+								$submodulos = $modulo->submodulos;
+
+								//Recorrer submodulos
+								foreach ($submodulos as $submodulo) {
+									$nombre_submodulo = $submodulo->nombre_submodulo;
+									$acciones = $submodulo->acciones;
+
+									//Recorrer acciones
+									foreach ($acciones as $accion) {
+										$nombre_accion = $accion->nombre_accion;
+
 										$data = array(
-											'receptor' => post('correo'),
-											'asunto' => 'Registro de usuario',
-											'body' => $mensaje
+											'id_rol' => $id,
+											'id_modulo' => $modulo->id_modulo,
+											'id_submodulo' => $submodulo->id_submodulo,
+											'id_accion' => $accion->id_accion,
+											'estado' => 0
 										);
-		
-										$correo = new Correo();
-		
-										if ($correo->enviarCorreo($data))
-											return json_encode(array(
-												'success' => 'El usuario se ha registrado correctamente',
-											));
-										else
-											return json_encode(array(
-												'error' => 'No se pudo enviar el correo, debe indicar contraseña manualmente: ' + $pass,
-											));
-									} //Fin de validacion de id_contrasenia
-		
-									else
-										return json_encode(array(
-											'error' => 'No se pudo guardar la contraseña.',
-											'then' => 'location.reload();'
-										));
-								} //Fin de validacion de id
-		
-								else
-									return json_encode(array(
-										'error' => 'No se pudo guardar el usuario.',
-									));
-							} //Fin de validacion de correo
-		
-							else
-								return json_encode(array(
-									'error' => 'El correo ya se encuentra registrado.',
-								));
-		
-							break;
+
+										$model = new PermisosModel();
+
+										$id_permiso = $model->insert($data);
+
+										if (post('permiso_' . $nombre_modulo . '_' . $nombre_submodulo . '_' . $nombre_accion)) {
+											$data = array(
+												'estado' => 1
+											);
+
+											$model->update($data, $id_permiso);
+
+											//var_dump('Estoy llegando a '.$nombre_modulo.'_'.$nombre_submodulo.'_'.$nombre_accion);
+										}
+									}
+								}
+							} //Fin del ciclo
+
+							return json_encode(array(
+								'success' => 'El rol se ha registrado correctamente',
+							));
+						} //Fin de validacion de id
+
+						else
+							return json_encode(array(
+								'error' => 'No se pudo guardar el rol.',
+							));
+						break;
 				} //Fin del switch
 			} //Fin de la validacion
 
@@ -235,40 +459,10 @@ class Seguridad extends BaseController
 		} //Fin de la validacion de login
 
 		else
-			return redirect(baseUrl());
+			return json_encode(array(
+				'error' => 'No se ha iniciado sesión',
+			));
 	} //Fin del metodo para guardar un objeto
-
-	public function validar($codigo = '', $objeto = null)
-	{
-		if (!is_login()) {
-			return redirect(baseUrl('seguridad/login'));
-		} //Fin del if
-
-		else {
-			if ($objeto == 'participantes') {
-				return json_encode($this->validarParticipante($codigo));
-			}
-
-			elseif ($objeto == 'usuarios') {
-				return json_encode($this->validarUsuario($codigo));
-			}
-		} //Fin del else
-
-		return json_encode(false);
-	} //Fin de la funcion
-
-	/**Validar si un usuario ya se encuentra registrado */
-	private function validarParticipante($cedula)
-	{
-		$usuariosModel = new ParticipantesModel();
-
-		$usuariosModel->where('cedula_usuario', $cedula)->where('id_rol', 2);
-
-		if ($usuariosModel->fila())
-			return true;
-
-		return false;
-	} //Fin de la funcion para validar si un usuario existe
 
 	/**Cambiar la contrasenia de un usuario */
 	private function actualizar_contrasenia($id, $pass, $old_pass)
@@ -352,7 +546,7 @@ class Seguridad extends BaseController
 	{
 		if (getSegment(3)) {
 			//Validar permiso
-			if (!is_admin())
+			if (!validar_permiso('seguridad', 'usuarios', 'modificar'))
 				return json_encode(array(
 					'error' => 'No tiene permisos para realizar esta acción.',
 				));
@@ -386,19 +580,6 @@ class Seguridad extends BaseController
 			));
 	} //Fin del metodo para enviar una contraseña temporal
 
-	/**Validar si un usuario ya se encuentra registrado */
-	private function validarUsuario($cedula)
-	{
-		$usuariosModel = new UsuariosModel();
-
-		$usuariosModel->where('cedula_usuario', $cedula);
-
-		if ($usuariosModel->fila())
-			return true;
-
-		return false;
-	} //Fin de la funcion para validar si un usuario existe
-
 	/**Actualizar un objeto de la base de datos */
 	public function update($id, $objeto = null)
 	{
@@ -419,18 +600,13 @@ class Seguridad extends BaseController
 									'sexo' => post('sexo'),
 									'correo' => post('correo'),
 									'telefono' => post('telefono'),
-									'id_nacionalidad' => post('id_nacionalidad'),
 									'id_ubicacion' => post('id_ubicacion'),
 									'otras_senias' => trim(post('otras_senias')),
-									'fecha_nacimiento' => post('fecha_nacimiento'),
 								);
 
 								$model = $this->model('usuarios');
-								
-								if(!is_admin())
-									$model = $this->model('participantes');
 
-								if ($model->update($data, $id) != 0) {
+								if ($model->update($data, $id)) {
 									setSession('nombre', post('nombre'));
 									setSession('apellidos', post('apellidos'));
 									setSession('correo', post('correo'));
@@ -455,7 +631,7 @@ class Seguridad extends BaseController
 
 							default:
 								//Si el usuario no tiene permisos para modificar
-								if (!is_admin())
+								if (!validar_permiso('seguridad', 'usuarios', 'modificar'))
 									return json_encode(array(
 										'error' => 'No tiene permisos para realizar esta acción.',
 									));
@@ -470,26 +646,103 @@ class Seguridad extends BaseController
 									'fecha_nacimiento' => post('fecha_nacimiento'),
 								);
 
-								$model = $this->model($objeto);
-								$id = $model->update($data, $id);
+								$model = $this->model('usuarios');
 
 								/**Si el id es diferente de 0 */
-								if ($id != 0) {
+								if ($model->update($data, $id))
 									return json_encode(array(
-										'estado' => '1',
+										'estado' => 1,
+										'success' => 'Se actualizó el usuario correctamente.',
 									));
-								} //Fin de la validacion del id
 
-								/**Si el id es 0 */
-								else {
-									$error = $model->getError();
-
+								else
 									return json_encode(array(
-										'error' => $error->sentencia,
+										'error' => 'No se pudo actualizar el usuario',
 									));
-								} //Fin de la validacion del id
 								break;
 						} //Fin del switch de id
+						break;
+
+						/**Roles */
+					case 'roles':
+						$data = array(
+							'nombre_rol' => post('nombre_rol'),
+						);
+
+						$model = model('roles');
+
+						if ($model->update($data, $id)) {
+							$submodulosModel = new SubmodulosAccionesModel();
+
+							$modulos = $submodulosModel->modulos();
+
+							//Recorrer modulos
+							foreach ($modulos as $modulo) {
+								$id_modulo = $modulo->id_modulo;
+								$nombre_modulo = $modulo->nombre_modulo;
+
+								$submodulos = $modulo->submodulos;
+
+								//Recorrer submodulos
+								foreach ($submodulos as $submodulo) {
+									$id_submodulo = $submodulo->id_submodulo;
+									$nombre_submodulo = $submodulo->nombre_submodulo;
+
+									$acciones = $submodulo->acciones;
+
+									//Recorrer acciones
+									foreach ($acciones as $accion) {
+										$id_accion = $accion->id_accion;
+										$nombre_accion = $accion->nombre_accion;
+
+										$model = new PermisosModel();
+
+										$id_permiso = $model->get_permiso($id, $id_modulo, $id_submodulo, $id_accion);
+
+										$model = new PermisosModel();
+
+										if (post('permiso_' . $nombre_modulo . '_' . $nombre_submodulo . '_' . $nombre_accion)) {
+											$data = array(
+												'estado' => 1
+											);
+
+											if (!$id_permiso) {
+												$data = array(
+													'id_rol' => $id,
+													'id_modulo' => $modulo->id_modulo,
+													'id_submodulo' => $submodulo->id_submodulo,
+													'id_accion' => $accion->id_accion,
+													'estado' => 1
+												);
+
+												$model->insert($data);
+											} else
+												$model->update($data, $id_permiso);
+										} else {
+											if (!$id_permiso) {
+												$data = array(
+													'id_rol' => $id,
+													'id_modulo' => $modulo->id_modulo,
+													'id_submodulo' => $submodulo->id_submodulo,
+													'id_accion' => $accion->id_accion,
+													'estado' => 0
+												);
+
+												$model->insert($data);
+											} else
+												$model->update(array('estado' => 0), $id_permiso);
+										}
+									}
+								}
+							}
+
+							return json_encode(array(
+								'success' => 'Se actualizó el rol correctamente.',
+							));
+						} else
+							return json_encode(array(
+								'error' => 'No se pudo actualizar el rol',
+							));
 						break;
 				} //Fin del switch de objeto
 			} //Fin de la validacion
@@ -502,321 +755,4 @@ class Seguridad extends BaseController
 
 		return redirect(baseUrl());
 	} //Fin del metodo para actualizar un objeto
-
-	public function index()
-	{
-		if (!is_login())
-			return redirect(baseUrl());
-
-		if (is_admin()) {
-			$usuariosModel = new UsuariosModel();
-			$usuarios = $usuariosModel->getUsuarios();
-
-			$codigosPaisesModel = new CodigosPaisesModel();
-			$codigos_paises = $codigosPaisesModel->getAll();
-
-			$nombreVista = 'seguridad/usuario/listado';
-
-			$head = '<!--DataTables-->
-			<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.3/datatables.min.css"/>';
-
-			$script = '<!--DataTables-->
-			<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.3/datatables.min.js"></script>
-				
-				<!-- Listado -->
-				<script src="' . getFile('dist/js/base/listado.js') . '"></script>
-				
-				<!-- Usuarios -->
-				<script src="' . getFile('dist/js/seguridad/usuarios.js') . '"></script>';
-
-			$nombreForm = 'seguridad/usuario/form';
-
-			$panelInformacion = array(
-				'nacionalidades' => $codigos_paises,
-			);
-
-			$dataModal = array(
-				'nombreForm' =>	$nombreForm,
-				'dataForm' => array(
-					'panelInformacion' => $panelInformacion,
-				),
-			);
-
-			$dataView = array(
-				'usuarios' => $usuarios,
-				'dataModal' => $dataModal
-			);
-
-			$dataHead = array(
-				'titulo' => 'Administradores',
-				'head' => $head
-			);
-
-			$data = array(
-				'nombreVista' => $nombreVista,
-				'dataView' => $dataView,
-				'dataHead' => $dataHead,
-				'script' => $script
-			);
-
-			return view('layout', $data);
-		} //Fin de la validacion
-
-		else {
-			$error = $this->object_error(500, 'No tiene permisos para acceder a esta página.');
-
-			return $this->error($error);
-		}
-	} //Fin de la funcion para retornar los usuarios del sistema
-
-	/**Mostrar los participantes de la feria */
-	public function participantes()
-	{
-		if (!is_login()) {
-			return redirect(baseUrl());
-		} //Fin del if
-
-		elseif (!is_admin()) {
-			return redirect(baseUrl('seguridad/perfil'));
-		} else {
-			$nombreVista = 'mercadito/participantes/listado';
-
-			$participantesModel = new ParticipantesModel();
-			$participantes = $participantesModel->getParticipantes();
-
-			$codigosPaisesModel = new CodigosPaisesModel();
-			$codigos_paises = $codigosPaisesModel->getAll();
-
-			$ubicacionesModel = new UbicacionesModel();
-			$provincias = $ubicacionesModel->provincias();
-
-			$head = '<!--DataTables-->
-				<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.3/datatables.min.css"/>';
-
-			$script = '<!--DataTables-->
-				<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.3/datatables.min.js"></script>
-					
-					<!-- Listado -->
-					<script src="' . getFile('dist/js/base/listado.js') . '"></script>
-
-					<!-- Ubicaciones-->
-					<script src="' . getFile('dist/js/base/ubicaciones.js') . '"></script>
-					
-					<!-- Inscripciones -->
-					<script src="' . getFile('dist/js/mercado/inscripciones.js') . '"></script>';
-
-			$dataHead = array(
-				'titulo' => 'Participantes',
-				'head' => $head
-			);
-
-			$panelInformacion = array(
-				'nacionalidades' => $codigos_paises,
-			);
-
-			$panelUbicacion = array(
-				'provincias' => $provincias,
-			);
-
-			$dataModal = array(
-				'nombreForm' =>	'mercadito/participantes/form',
-				'dataForm' => array(
-					'panelInformacion' => $panelInformacion,
-					'panelUbicacion' => $panelUbicacion,
-				),
-			);
-
-			$dataView = array(
-				'participantes' => $participantes,
-				'dataModal'	=> $dataModal,
-			);
-
-			$data = array(
-				'nombreVista' => $nombreVista,
-				'dataView' => $dataView,
-				'script' => $script,
-				'dataHead' => $dataHead
-			);
-
-			return view('layout', $data);
-		}
-	} //Fin de la funcion
-
-	public function perfil()
-	{
-		if (is_login()) {
-
-			$script = '<!-- Contrasenia-->
-					<script src="' . getFile('dist/js/seguridad/contrasenia.js') . '"></script>
-
-					<!-- Perfil de usuario -->
-					<script src="' . getFile('dist/js/seguridad/perfil.js') . '"></script>
-					
-					<!-- Ubicaciones-->
-					<script src="' . getFile('dist/js/base/ubicaciones.js') . '"></script>';
-
-			if (!is_admin()) {
-				$usuariosModel = new ParticipantesModel();
-				$perfil = $usuariosModel->getById(getSession('id_usuario'));
-			} else {
-				$usuariosModel = new UsuariosModel();
-				$perfil = $usuariosModel->getById(getSession('id_usuario'));
-			}
-
-			$ubicacionesModel = new UbicacionesModel();
-			$ubicacion = $ubicacionesModel->getById($perfil->id_ubicacion);
-
-			$ubicacionesModel = new UbicacionesModel();
-			$provincias = $ubicacionesModel->provincias();
-
-			$ubicacionesModel = new UbicacionesModel();
-			$cantones = $ubicacionesModel->cantones($ubicacion->cod_provincia);
-
-			$ubicacionesModel = new UbicacionesModel();
-			$distritos = $ubicacionesModel->distritos($ubicacion->cod_provincia, $ubicacion->cod_canton);
-
-			$ubicacionesModel = new UbicacionesModel();
-			$barrios = $ubicacionesModel->barrios($ubicacion->cod_provincia, $ubicacion->cod_canton, $ubicacion->cod_distrito);
-
-			$ubicacion->provincias = $provincias;
-			$ubicacion->cantones = $cantones;
-			$ubicacion->distritos = $distritos;
-			$ubicacion->barrios = $barrios;
-			$ubicacion->otras_senias = $perfil->otras_senias;
-
-			$perfil->ubicacion = $ubicacion;
-
-			$codigosPaisesModel = new CodigosPaisesModel();
-			$codigos_paises = $codigosPaisesModel->getAll();
-
-			$perfil->nacionalidades = $codigos_paises;
-
-			$dataHead = array(
-				'titulo' => 'Perfil de usuario',
-			);
-
-			$dataForm = array(
-				'nombreForm' => 'seguridad/perfil/contrasenia'
-			);
-
-			$dataView = array(
-				'perfil' => $perfil,
-				'dataForm' => $dataForm,
-			);
-
-			$data = array(
-				'nombreVista' => 'seguridad/perfil/perfil',
-				'dataHead' => $dataHead,
-				'dataView' => $dataView,
-				'script' => $script
-			);
-
-			return view('layout', $data);
-		} //Fin de la validacion
-
-		else
-			header('Location: ' . baseUrl());
-	} //Fin de la funcion para retornar el perfil del usuario
-
-	public function auditorias()
-	{
-		if (is_login()) {
-			$auditoriaModel = new AuditoriaModel();
-
-			$head = '<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">';
-
-			$script = '<!--DataTables-->
-				<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
-				
-				<!-- Listado -->
-				<script src="' . getFile('dist/js/base/listado.js') . '"></script>
-
-				<script>
-				$(document).on("click", "#btnAgregar", function(e) {
-					e.preventDefault();
-			
-					mensajeAutomatico("Atencion", "Funcionalidad a implementar", "info");
-				});
-				</script>';
-
-			$dataView = array(
-				'auditorias' => $auditoriaModel->getAll(),
-			);
-
-
-			$dataHead = array(
-				'head' => $head,
-				'titulo' => 'Auditorias',
-			);
-
-			$titulo = 'Seguridad';
-			$objeto = 'Auditorias';
-			$pagina = 'Listado';
-
-			$dataHeader = array(
-				'titulo' => $titulo,
-				'objeto' => $objeto,
-				'pagina' => $pagina
-			);
-
-			$data = array(
-				'nombreVista' => 'seguridad/auditoria/listado',
-				'dataView' => $dataView,
-				'dataHeader' => $dataHeader,
-				'dataHead' => $dataHead,
-				'script' => $script
-			);
-
-			return view('layout', $data);
-		} //Fin de la validacion
-	} //Fin de la funcion para mostrar el listado de auditorias
-
-	public function errores()
-	{
-		if (is_login()) {
-			$erroresModel = new ErroresModel();
-
-			$errores = $erroresModel->getAll();
-
-			$nombreVista = 'seguridad/auditoria/errores';
-
-			$head = '<!--DataTables-->
-                <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">';
-
-			$script = '<!--DataTables-->
-				<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
-				
-				<!-- Listado -->
-				<script src="' . getFile('dist/js/base/listado.js') . '"></script>';
-
-			$dataView = array(
-				'errores' => $errores,
-			);
-
-			$dataHead = array(
-				'head' => $head,
-				'titulo' => 'Errores',
-			);
-
-			$titulo = 'Seguridad';
-			$objeto = 'Auditorias';
-			$pagina = 'Errores';
-
-			$dataHeader = array(
-				'titulo' => $titulo,
-				'objeto' => $objeto,
-				'pagina' => $pagina
-			);
-
-			$data = array(
-				'nombreVista' => $nombreVista,
-				'dataView' => $dataView,
-				'dataHeader' => $dataHeader,
-				'dataHead' => $dataHead,
-				'script' => $script
-			);
-
-			return view('layout', $data);
-		} //Fin de la validacion
-	} //Fin de la funcion para mostrar todos los errores
 }//Fin de la clase

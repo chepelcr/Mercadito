@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modulos.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modulos.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** Nombre del modulo activo */
+var modulo_activo = '';
+
+/** Nombre del submodulo activo */
+var submodulo_activo = '';
+
+/** Elemento que se está mostrando en la aplicación */
+var elemento_activo = '';
+
+/**Activar tooltips */
+function activar_tooltips() {
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+}
+
+/**Desactivar tooltips */
+function desactivar_tooltips() {
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip('dispose')
+    });
+}
+
+/**Ocultar todos los contenedores de la página */
+function ocultar_contenedores() {
+    //Ocultar el contenedor de inicio
+    $('#inicio').hide();
+
+    //Ocultar el contenedor
+    $('#contenedor').hide();
+
+    //Ocultar los modal
+    $('.modal').modal('hide');
+}
+
+/**Cargar un modulo en la pantalla 
+ * @param {string} nombre_modulo Nombre del modulo a cargar
+*/
+function cargar_modulo(nombre_modulo) {
+    ocultar_contenedores();
+
+    activar_tooltips();
+
+    elemento_activo = nombre_modulo;
+
+    $('#' + nombre_modulo).show();
+}
+
+/**Cuando el documento está listo */
+$(document).ready(function () {
+    activar_tooltips();
+
+    $(document).keydown(function (e) {
+        //Si no hay ningun input enfocado
+        if (!$('input:focus').length &amp;&amp; !$('textarea:focus').length &amp;&amp; !$('select:focus').length &amp;&amp; e.ctrlKey) {
+            if (modulo_activo != 'inicio' &amp;&amp; e.ctrlKey &amp;&amp; submodulo_activo != 'inicio') {
+                //Si el usuario presiona ctrlLeft+n en un modulo distinto al de inicio y documentos
+                if (e.which == 78 &amp;&amp; form_activo == '') {
+                    e.preventDefault();
+                    agregar('Agregar ' + submodulo_activo)
+                }
+
+                if (form_activo != '') {
+                    //Si el usuario presiona ctrlLeft+e
+                    if (e.which == 69) {
+                        e.preventDefault();
+                        editar();
+                    }
+
+                    //Si el usuario presiona ctrl+c
+                    if (e.which == 67) {
+                        e.preventDefault();
+                        cancelar_accion();
+                    }
+                }
+
+                else {
+                    if (table != null) {
+                        //Si el usuario presiona la tecla flecha abajo
+                        if (e.which == 40) {
+                            //Ir al siguiente elemento
+                            siguiente_elemento();
+                        }
+    
+                        //Si el usuario presiona la tecla flecha arriba
+                        if (e.which == 38) {
+                            //Ir al anterior elemento
+                            elemento_anterior();
+                        }
+                    }
+                }
+            }
+
+            else {
+                //Si el usuario presiona ctrlLeft+e
+                if (e.which == 69) {
+                    e.preventDefault();
+                    cargar_inicio_modulo('empresa');
+                }
+
+                //Si el usuario presiona ctrlLeft+s
+                if (e.which == 83) {
+                    e.preventDefault();
+                    cargar_inicio_modulo('seguridad');
+                }
+
+                //Si el usuario presiona ctrlLeft+d
+                if (e.which == 68) {
+                    e.preventDefault();
+                    cargar_inicio_modulo('documentos');
+                }
+
+                //Si el usuario presiona ctrlLeft+i
+                if (e.which == 73) {
+                    e.preventDefault();
+                    cargar_inicio();
+                }
+            }
+        }
+    });
+});
+
+/**Cambiar el titulo de la pagina y agregarla al historial 
+ * @param {string} modulo Nombre del modulo a cargar
+ * @param {string} submodulo Nombre del submodulo a cargar
+*/
+function poner_titulo(modulo, submodulo = 'inicio') {
+    modulo_activo = modulo;
+    submodulo_activo = submodulo;
+
+    //modulo con primera letra en mayuscula
+    var modulo_mayuscula = modulo.charAt(0).toUpperCase() + modulo.slice(1);
+
+    //Submodulo con primera letra en mayuscula
+    var submodulo_mayuscula = submodulo.charAt(0).toUpperCase() + submodulo.slice(1);
+
+    //Eliminar guiones bajos de los nombres de los modulos en mayuscula
+    modulo_mayuscula = modulo_mayuscula.replace(/_/g, ' ');
+
+    //Eliminar guiones bajos de los nombres de los submodulos en mayuscula
+    submodulo_mayuscula = submodulo_mayuscula.replace(/_/g, ' ');
+
+    $('.modulo-pagina').text(modulo_mayuscula);
+
+    $('.submodulo-pagina').text(submodulo_mayuscula);
+
+    if (submodulo_mayuscula != 'Inicio') {
+        titulo = 'Red de Trueque | ' + modulo_mayuscula + ' | ' + submodulo_mayuscula;
+
+        //Agregar pagina al historial
+        history.pushState(null, null, base + modulo + '/' + submodulo);
+    }
+
+    else {
+        titulo = 'Red de Trueque | ' + modulo_mayuscula;
+
+        //Agregar pagina al historial
+        history.pushState(null, null, base + modulo);
+    }
+
+    //Cambiar el titulo del navegador web
+    $('title').text(titulo);
+}//Fin de poner_titulo</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#abrir_modal">abrir_modal</a></li><li><a href="global.html#abrir_perfil">abrir_perfil</a></li><li><a href="global.html#activar_modulo_boton">activar_modulo_boton</a></li><li><a href="global.html#activar_tooltip_tabla">activar_tooltip_tabla</a></li><li><a href="global.html#activar_tooltips">activar_tooltips</a></li><li><a href="global.html#base">base</a></li><li><a href="global.html#cargar_contenido">cargar_contenido</a></li><li><a href="global.html#cargar_inicio">cargar_inicio</a></li><li><a href="global.html#cargar_inicio_modulo">cargar_inicio_modulo</a></li><li><a href="global.html#cargar_listado">cargar_listado</a></li><li><a href="global.html#cargar_modulo">cargar_modulo</a></li><li><a href="global.html#cerrar_modal">cerrar_modal</a></li><li><a href="global.html#crear_data_table">crear_data_table</a></li><li><a href="global.html#desactivar_tooltips">desactivar_tooltips</a></li><li><a href="global.html#desactivar_tooltips_tabla">desactivar_tooltips_tabla</a></li><li><a href="global.html#desactivar_ubicaciones">desactivar_ubicaciones</a></li><li><a href="global.html#elemento_activo">elemento_activo</a></li><li><a href="global.html#elemento_anterior">elemento_anterior</a></li><li><a href="global.html#enfocar_fila_actual">enfocar_fila_actual</a></li><li><a href="global.html#fila_actual">fila_actual</a></li><li><a href="global.html#filtrar_tabla">filtrar_tabla</a></li><li><a href="global.html#formatear_cedula">formatear_cedula</a></li><li><a href="global.html#llenarUbicacion">llenarUbicacion</a></li><li><a href="global.html#loading">loading</a></li><li><a href="global.html#mensaje">mensaje</a></li><li><a href="global.html#mensajeAutomatico">mensajeAutomatico</a></li><li><a href="global.html#mensajeAutomaticoAccion">mensajeAutomaticoAccion</a></li><li><a href="global.html#mensajeAutomaticoRecargar">mensajeAutomaticoRecargar</a></li><li><a href="global.html#modal_activo">modal_activo</a></li><li><a href="global.html#modulo_activo">modulo_activo</a></li><li><a href="global.html#obtener_barrios">obtener_barrios</a></li><li><a href="global.html#obtener_cantones">obtener_cantones</a></li><li><a href="global.html#obtener_contribuyente">obtener_contribuyente</a></li><li><a href="global.html#obtener_distritos">obtener_distritos</a></li><li><a href="global.html#obtener_tipo_cambio">obtener_tipo_cambio</a></li><li><a href="global.html#ocultar_contenedores">ocultar_contenedores</a></li><li><a href="global.html#poner_titulo">poner_titulo</a></li><li><a href="global.html#recargar_listado">recargar_listado</a></li><li><a href="global.html#salir">salir</a></li><li><a href="global.html#siguiente_elemento">siguiente_elemento</a></li><li><a href="global.html#submodulo_activo">submodulo_activo</a></li><li><a href="global.html#table">table</a></li><li><a href="global.html#url_listado">url_listado</a></li><li><a href="global.html#vaciar_ubicacion">vaciar_ubicacion</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Mar 15 2022 14:28:24 GMT-0600 (hora estándar central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -11,34 +11,75 @@
     ?>
 </head>
 
-<body class="bg-mercadito-claro pt-2">
-    <div class="container">
-        <div class="container-fluid">
-            <img src="<?=getFile('images/letras feria.png')?>" class="img-fluid align-self-center pb-2" alt="">
+<body class="bg-mercadito-claro layout-fixed layout-footer-fixed layout-top-nav">
+    <div class="wrapper">
+        <div class="loader">
+            <div class="circle-small"></div>
+            <figure>
+                <img class="circle-inner-inner img-fluid" src="<?=baseUrl('files/images/logo sin letras.png')?>"
+                    alt="Modas Laura">
 
-            <?php 
-                echo view('base/navbar');
-            ?>
+                <!-- Colocar 'cargando' abajo de la imagen -->
+                <figcaption class="text-center pt-5">
+                    <h1>Mercadito del Trueque</h1>
+                </figcaption>
+            </figure>
         </div>
-    </div>
 
-    <div class="container pt-2">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <?php 
-                        if(isset($dataView))
-                            echo view($nombreVista, $dataView);
-                        
-                        else
-                            echo view($nombreVista);
-                    ?>
+        <?php 
+            echo view('base/navbar', array('modulos' => $modulos));
+        ?>
+
+        <div class="content-wrapper pt-2 bg-transparent">
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12" id="inicio">
+                            <?php
+                                echo view('inicio/dash', array('modulos'=>$modulos));
+                            ?>
+                        </div>
+
+                        <div class="col-md-12">
+                            <!-- Recorre submodulos y cargar modulo de inicio -->
+                            <?php
+                                foreach ($modulos as $modulo) {
+                                    $nombre_modulo = $modulo->nombre_modulo;
+                            ?>
+
+                            <div class="contenedor" id="contenedor_<?=$nombre_modulo?>">
+                                <?php
+                                    echo view('base/modal/modulo', $modulo);
+
+                                        //var_dump($modulo->submodulos);
+                                        //Recorrer submodulos
+                                        foreach($modulo->submodulos as $submodulo):
+                                            $submodulo->nombre_modulo = $modulo->nombre_modulo;
+
+                                            //var_dump($submodulo);
+
+                                            if($modulo != 'seguridad' && $submodulo != 'auditorias')
+                                                echo view('base/modal/submodulo', $submodulo);
+                                        endforeach;
+                                ?>
+                            </div>
+
+                            <?php } ?>
+                        </div>
+
+
+                        <div class="col-md-12 contenedor" id="contenedor">
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
-    </div>
 
-    <?php echo view('base/footer')?>
+        <!-- Perfil del usuario que ha iniciado sesion -->
+        <?= view('base/persona/perfil', array('perfil'=> getPerfil()))?>
+
+        <?php echo view('base/footer')?>
+    </div>
 
     <?php
 
