@@ -11,7 +11,8 @@
     <button class="btn btn-secondary nav-modulo nav-<?= $nombre_modulo ?>" data-toggle="tooltip"
         title="<?= ucwords(str_replace('_', ' ', $nombre_modulo)) ?>"
         onclick="cargar_inicio_modulo('<?php echo $modulo->nombre_modulo ?>')" type="button">
-        <?= ucwords(str_replace('_', ' ', $nombre_modulo)) ?> <i class="fa <?= $icono ?> nav-icon"></i>
+        <i class="fa-solid <?= $icono ?> nav-icon"></i>
+        <span class="nav-text"><?= ucwords(str_replace('_', ' ', $nombre_modulo)) ?></span>
     </button>
 
     <button type="button"
@@ -33,7 +34,9 @@
             <button data-toggle="tooltip" title="<?= ucwords(str_replace('_', ' ', $nombre_submodulo)) ?>"
                 class="w-100 btn btn-dark nav-button btn_<?= $nombre_modulo . '_' . $nombre_submodulo ?>" type="button"
                 onclick="cargar_listado('<?= $nombre_modulo ?>', '<?= $nombre_submodulo ?>', '<?= baseUrl($url) ?>')">
-                <?= ucwords(str_replace('_', ' ', $nombre_submodulo)) ?> <i class="fa <?= $icono ?>"></i>
+                <div class="d-flex justify-content-between">
+                <?= ucwords(str_replace('_', ' ', $nombre_submodulo)) ?> <i class="fa-solid <?= $icono ?>"></i>
+                </div>
             </button>
         </div>
         <?php endif;

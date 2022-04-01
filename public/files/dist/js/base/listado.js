@@ -42,6 +42,9 @@ function cargar_listado(modulo = '', submodulo = '', url = '') {
                     //Mostrar la respuesta
                     mensajeAutomatico('Atencion', respuesta.error, 'error');
                 }
+            }).fail(function (xhr, textStatus, errorThrown) {
+                //Mostrar la respuesta
+                mensajeAutomatico('Atencion', errorThrown, 'error');
             });
         });
     }//Fin if
@@ -57,7 +60,7 @@ function cargar_contenido(contenido, modulo, submodulo) {
     submodulo_activo = submodulo;
 
     //Mostrar la respuesta
-    if (modulo == 'seguridad' && (submodulo == 'errores' || submodulo == 'auditorias')) {
+    if ((modulo == 'administracion' && (submodulo == 'errores' || submodulo == 'auditorias')) || (modulo == 'inicio' && submodulo != 'inicio')) {
         //Cerrar todos los modal
         $('.modal').modal('hide');
 
@@ -66,6 +69,9 @@ function cargar_contenido(contenido, modulo, submodulo) {
 
         //Agregar la respuesta
         $('#contenedor').append(contenido);
+
+        //Mostar el .contenedor
+        $('.contenedor').show();
 
         cargar_modulo('contenedor');
     }
@@ -94,7 +100,7 @@ function cargar_contenido(contenido, modulo, submodulo) {
         
     }
 
-    //activar_modulo_boton(modulo, submodulo);
+    activar_modulo_boton(modulo, submodulo);
 
     poner_titulo(modulo, submodulo);
 

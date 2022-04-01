@@ -35,7 +35,7 @@
                 } ?>
             </td>
             <td class="col-2">
-                <?= get_botones($usuario->id_usuario, 'usuario', 'seguridad', 'usuarios',  $usuario->estado) ?>
+                <?= get_botones($usuario->id_usuario, 'usuario', 'administracion', 'usuarios',  $usuario->estado) ?>
             </td>
             <!--Fin de las opciones-->
         </tr>

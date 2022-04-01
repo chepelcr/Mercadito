@@ -1,3 +1,6 @@
+/**Formato de la cedula iniciado o no */
+var formato = false;
+
 /**Activar o desactivar campos codigo_venta  y cabys */
 function campos_productos(estado = false, elemento = '') {
     activar_campo_id('codigo_venta', estado, elemento);
@@ -152,3 +155,76 @@ function desactivar_permisos(elemento = '') {
         $('.inp-chk').val('');
     }
 }//Fin de la funcion
+
+/**Validar la identificacion de un formulario */
+function validar_identificacion(identificacion = '') {
+    
+    if(!formato && identificacion!='')
+    {
+        switch (modulo_activo) {
+            case 'seguridad':
+                if(submodulo_activo == 'usuarios')
+                    validar(identificacion, 'usuario');
+                break;
+        }//Fin del switch
+    }//Fin de validacion
+
+    else
+        formato = false;
+}
+
+/**Obtener un contribuyente del ministerio de hacienda */
+function obtener_contribuyente(identificacion = null) {
+    var cedula = identificacion;
+
+    if (cedula != '' && cedula) {
+        Pace.track(function () {
+            $.ajax({
+                "url": "https://api.hacienda.go.cr/fe/ae?identificacion=" + cedula,
+                "method": "get",
+            }).done(function (response) {
+                if (response.code != 400 && response.code != 404) {
+                    nombre = response.nombre;
+
+                    //Poner la prmera letra de cada palabra en mayuscula
+                    nombre = nombre.replace(/\w\S*/g, function (txt) {
+                        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                    });
+
+                    cedula_formateada = formatear_cedula(cedula, response.tipoIdentificacion);
+
+                    $("#" + form_activo).find('#identificacion').val(cedula_formateada);
+
+                    $("#" + form_activo).find("#nombre").val(nombre);
+                    $("#" + form_activo).find("#id_tipo_identificacion").val(response.tipoIdentificacion);
+                    $("#" + form_activo).find("#cod_pais").val(52);
+
+                    activar_campos_contribuyente(true, form_activo);
+
+                    //Desactivar el identificacion
+                    $("#" + form_activo).find("#identificacion").attr("disabled", true);
+                    $("#" + form_activo).find("#identificacion").attr("readonly", true);
+
+                    //Activar el btn-eliminar
+                    $("#" + form_activo).find(".btn-eliminar").attr("disabled", false);
+                }//Fin de validacion de respuesta
+
+                if (response.code == 404) {
+                    $("#" + form_activo).find("#nombre").val('');
+                    $("#" + form_activo).find("#id_tipo_identificacion").val('');
+                    $("#" + form_activo).find("#cod_pais").val('');
+
+                    activar_campos_contribuyente(false, form_activo);
+                }//Fin de validacion de respuesta
+            });
+        });
+    }
+
+    else {
+        $("#" + form_activo).find("#nombre").val('');
+        $("#" + form_activo).find("#id_tipo_identificacion").val('');
+        $("#" + form_activo).find("#cod_pais").val('');
+
+        activar_campos_contribuyente(false, form_activo);
+    }
+}//Fin de obtener un contribuyente del ministerio de hacienda

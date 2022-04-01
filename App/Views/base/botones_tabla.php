@@ -6,6 +6,30 @@
     </button>
 
     <?php
+
+    if(validar_permiso($modulo, $submodulo, 'pertenecer') && getSession('id_tipo_organizacion') != 4 && $estado == 1) {
+        if(!pertenece_feria($id)){
+    ?>
+    <!-- Boton para pertenecer -->
+    <button onclick="pertenecer('<?= $id ?>');" type="button" class="btn btn-success btn-pertenecer"
+        data-toggle="tooltip" title="Pertenecer a <?= $objeto ?>">
+        <i class="fa-solid fa-arrows-to-dot"></i>
+    </button>
+    <?php
+        }
+        
+        else{
+    ?>
+    <!-- Boton para desvincular -->
+    <button onclick="desvincular('<?= $id ?>');" type="button" class="btn btn-danger btn-desvincular"
+        data-toggle="tooltip" title="Desvincular de <?= $objeto ?>">
+        <i class="fa-solid fa-arrows-alt-h"></i>
+    </button>
+    <?php
+        }
+
+    }
+
     if (validar_permiso($modulo, $submodulo, 'modificar')) {
     ?>
     <!-- Modificar -->
@@ -86,10 +110,7 @@
 
     <?php
         }
-        ?>
 
-    <!-- Si isset($estado) -->
-    <?php
         if (isset($estado) && $submodulo != 'usuarios' && $submodulo != 'clientes') {
             if ($estado == 1) {
         ?>

@@ -20,6 +20,8 @@ class UbicacionesModel extends Model
         'barrio',
     ];
 
+    protected $dbGroup = 'seguridad';
+    
     protected $autoIncrement = true;
     protected $auditorias = true;
 

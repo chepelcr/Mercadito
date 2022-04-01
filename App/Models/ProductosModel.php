@@ -11,12 +11,12 @@ class ProductosModel extends Model
 	protected $pk_tabla = 'id_producto';
 
 	protected $camposTabla = [
-        'id_participante',
+        'id_organizacion',
 		'nombre',
 		'descripcion',
         'tipo',
         'precio',
-        'nombre_imagen',
+        'imagen',
 		'fecha_creacion',
 		'fecha_modificacion',
 		'fecha_eliminacion',
@@ -27,9 +27,22 @@ class ProductosModel extends Model
 
 	protected $auditorias = true;
 
-    /**Obtener todos los productos de un participante por id */
-    function getProductos($id_participante)
-    {
-        return $this->where('id_participante', $id_participante)->getAll();
-    }//Fin de la función getProductos
+	/**Obtener un producto para una organizacion */
+	function obtener($id)
+	{
+		switch ($id) {
+			case 'organizacion':
+				$this->where('id_organizacion', getSession('id_organizacion'));
+				return $this->getAll();
+				break;
+
+			case 'all':
+				return $this->getAll();
+				break;
+			
+			default:
+				return $this->getById($id);
+				break;
+		}
+	}
 }//Fin de la clase

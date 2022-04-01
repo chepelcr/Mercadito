@@ -1,6 +1,7 @@
 <?php
     namespace Core;
     
+    /**Clase Controller que gestiona las funciones basicas de la aplicacion */
     class Controller
     {
         /** Archivos de ayuda creados por el usuario */
@@ -59,16 +60,16 @@
 
         public function error($error = array())
         {
+            $error = (object) $error;
+
             $nombreVista = 'base/error';            
 
 			$dataView = array(
 				'error'=>$error,
 			);
 
-            $data = array(
-                'nombreVista'=>$nombreVista,
-                'dataView'=>$dataView
-            );
+            //Poner el header en 404
+            header('HTTP/1.0 404 '.$error->error);
 
             return view($nombreVista, $dataView);
         }//Fin de la funcion error

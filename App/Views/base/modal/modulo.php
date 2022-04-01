@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-<?=$nombre_modulo?>" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade modal-modulo" data-bs-backdrop="static" data-bs-keyboard="false" id="modal-<?=$nombre_modulo?>" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
 
         <!-- Contenido del modal -->
@@ -10,7 +10,7 @@
                     <i class="fa <?=$icono?>"></i>
                     <?=ucfirst(str_replace("_", " ", $nombre_modulo))?>
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" onclick="cargar_inicio()" aria-label="Cerrar">
+                <button type="button" class="close text-white" title="Cerrar" data-toggle="tooltip" data-dismiss="modal" onclick="cargar_inicio()" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -46,7 +46,7 @@
                                             <div class="col-md-8">
                                                 <!-- Boton para entrar al modulo -->
                                                 <button class="btn btn-info btn-block" data-toggle="tooltip"
-                                                    title="Ir a <?=ucfirst(str_replace('_', ' ', $nombre_submodulo))?>"
+                                                    title="Ir a <?=str_replace('_', ' ', $nombre_submodulo)?>"
                                                     onclick="cargar_listado('<?=$nombre_modulo?>', '<?=$submodulo->nombre_submodulo?>', '<?= baseUrl($url)?>')">
                                                     <i class="fa fa-eye"></i>
                                                 </button>

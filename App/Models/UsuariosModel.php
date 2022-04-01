@@ -16,7 +16,7 @@ class UsuariosModel extends Model
 
 	protected $camposTabla = [
 		'nombre',
-		'apellidos',
+		'nombre_usuario',
 		'id_tipo_identificacion',
 		'identificacion',
 		'genero',
@@ -35,11 +35,13 @@ class UsuariosModel extends Model
 	];
 
 	protected $camposVista = [
+		'id_tipo_organizacion',
         'tipo_identificacion',
         'codigo_telefono',
         'nombre_pais',
 		'nombre_organizacion',
 		'nombre_rol',
+		'tipo_organizacion',
     ];
 
 	protected $autoIncrement = true;

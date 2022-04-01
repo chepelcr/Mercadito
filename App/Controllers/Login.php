@@ -7,18 +7,45 @@ use App\Models\UsuariosModel;
 /** Clase para iniciar sesion en la aplicacion */
 class Login extends BaseController
 	{
-		/** Funcion para mostrar el login */
+		/**Modulo de inicio de seguridad */
 		public function index()
 		{
 			if(!is_login())
-				return view('seguridad/login/login');
+			{
+				$script = '<script>
+					$(document).ready(function(){
+						//Esperar 5 segundos para mostrar login
+						setTimeout(function(){
+							cargar_login();
+						}, 5000);
+					});
+				</script>';
+			}
 
 			elseif(getSession('contrasenia_expiro'))
-				return view('seguridad/login/cambio_contrasenia');
+			{
+				$script = '<script>
+					$(document).ready(function(){
+						//Esperar 5 segundos para mostrar cambio de contraseña
+						setTimeout(function(){
+							cargar_cambio_contrasenia();
+						}, 5000);
+					});
+				</script>';
+			}
 
-			//Cargar la pagina principal
-			return redirect(baseUrl());
-		}//Fin de la funcion
+			else
+			{
+				//Cargar la pagina principal
+				return redirect(baseUrl());
+			}
+
+			$data = array(
+				'script' => $script,
+			);
+
+			return $this->inicio($data);
+		} //Fin de la funcion index
 
 		/** Funcion para consultar si el usuario existe en la base de datos */
 		public function consultar()
@@ -51,9 +78,11 @@ class Login extends BaseController
 							$data = array(
 								'id_usuario'=>$usuario->id_usuario,
 								'nombre'=>$usuario->nombre,
-								'apellidos'=>$usuario->apellidos,
 								'correo'=>$usuario->correo,
 								'telefono' => $usuario->telefono,
+								'id_organizacion' => $usuario->id_organizacion,
+								'id_tipo_organizacion' => $usuario->id_tipo_organizacion,
+								'login' => true,
 								'id_rol'=>$usuario->id_rol,
 								'estado' => $usuario->estado,
 							);
@@ -68,10 +97,12 @@ class Login extends BaseController
 							$data = array(
 								'id_usuario'=>$usuario->id_usuario,
 								'nombre'=>$usuario->nombre,
-								'apellidos'=>$usuario->apellidos,
 								'correo' => $usuario->correo,
 								'telefono' => $usuario->telefono,
+								'id_organizacion' => $usuario->id_organizacion,
+								'id_tipo_organizacion' => $usuario->id_tipo_organizacion,
 								'id_rol'=>$usuario->id_rol,
+								'login' => true,
 								'id_estado' => $usuario->id_estado,
 								'contrasenia_expiro' => true,
 							);

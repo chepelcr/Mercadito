@@ -1,15 +1,12 @@
 <!--Panel para asignar los permisos de los modulos a un rol especifico -->
 <div class="card card-permisos">
     <div class="card-header">
-        <h2 class="card-title">
-            <i class="fas fa-user-lock"></i> 
-            Permisos
-        </h2>
+        <div class="d-flex justify-content-between">
+            <h2 class="card-title">
+                Permisos
+            </h2>
 
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                <i class="fas fa-minus"></i>
-            </button>
+            <i class="fas fa-user-lock"></i>
         </div>
     </div>
 

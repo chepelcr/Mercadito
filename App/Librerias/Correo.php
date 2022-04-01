@@ -27,7 +27,7 @@ class Correo
             $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
             $mail->Username   = 'proyectojpgrow@gmail.com';                     //SMTP username
-            $mail->Password   = 'chpcr1997cr';                               //SMTP password
+            $mail->Password   = 'Qc:e9U.Hi_a5nL5';                               //SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
             $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 

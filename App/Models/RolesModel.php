@@ -17,10 +17,15 @@ class RolesModel extends Model
 
 	protected $camposTabla = [
 		'nombre_rol',
+		'id_tipo_rol',
 		'fecha_creacion',
 		'fecha_actualizacion',
 		'fecha_eliminacion',
 		'estado',
+	];
+
+	protected $camposVista = [
+		'tipo_rol',
 	];
 
 	protected $autoIncrement = true;
@@ -30,20 +35,23 @@ class RolesModel extends Model
 	/**Obtener un rol de la base de datos */
 	public function obtener($id)
 	{
-		if($id == 'all')
-		{
-			return $this->getAll();
-		}
-		
-		else
-		{
-			$rol = $this->getById($id);
+		switch ($id) {
+			case 'all':
+				return $this->getAll();
+			break;
 
-			$permisosModel = new PermisosModel();
-
-			$rol->modulos = (object) $permisosModel->modulos($id);
+			case 'organizacion':
+				return $this->where('id_tipo_rol', getSession('id_tipo_organizacion'))->getAll();
 			
-			return $rol;
+			default:
+				$rol = $this->getById($id);
+
+				$permisosModel = new PermisosModel();
+
+				$rol->modulos = (object) $permisosModel->modulos($id);
+				
+				return $rol;
+				break;
 		}
 
 		return null;

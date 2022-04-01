@@ -38,7 +38,12 @@ class Routes
 		$controllerName = "App\\Controllers\\".$controllerName;
 		$this->controller = new $controllerName();
 
-		return $this->controller;
+		//Si es una instancia de Controller
+		if ($this->controller instanceof Controller) {
+			return $this->controller;
+		}
+
+		return null;
 	}//Fin del metodo
 
 	/**función que llama al controlador y su respectiva acción, que son pasados como parámetros */

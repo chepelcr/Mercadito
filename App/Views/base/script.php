@@ -60,6 +60,9 @@
 <!-- Form || Permisos -->
 <?=getScript('form/permisos')?>
 
+<!-- Red || Feria-->
+<?=getScript('red/feria')?>
+
 <?php
     if(is_login())
     {

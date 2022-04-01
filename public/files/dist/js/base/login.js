@@ -139,3 +139,36 @@ function salir() {
         });
     })//Fin del mensaje
 }//Fin de la funcion salir
+
+/**Abrir el modal_login */
+function cargar_login() {
+    poner_titulo('login');
+    desactivar_tooltips();
+
+    var login = new bootstrap.Modal(document.getElementById('modal_login'))
+
+    //Abrir el modal_login
+    login.show();
+}
+
+function salir_feria()
+{
+    Swal.fire({
+        title: 'Espere',
+        text: 'Saliendo de feria virtual',
+        icon: 'info',
+        timer: 1500,
+        showConfirmButton: false,
+    }).then((result) => {
+        $.ajax({
+            url: base + 'inicio/salir',
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (respuesta) {
+                if (!respuesta.error) {
+                    location.href = base + 'inicio';
+                }
+            }
+        });
+    })//Fin del mensaje
+}//Fin de la funcion salir

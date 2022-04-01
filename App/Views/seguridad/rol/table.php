@@ -20,7 +20,7 @@
                                     echo '<span class="badge badge-danger">Inactivo</span>';
                             }?></td>
         <td>
-            <?= get_botones($rol->id_rol, 'rol', 'seguridad', 'roles',  $rol->estado)?>
+            <?= get_botones($rol->id_rol, 'rol', 'administracion', 'roles',  $rol->estado)?>
         </td>
         <!--Fin de las opciones-->
     </tr>

@@ -65,10 +65,13 @@ function agregar(titulo = '') {
                 }
                 break;
 
-            case 'seguridad':
+            case 'administracion':
                 switch (submodulo) {
                     case 'roles':
                         desactivar_permisos(form_activo);
+
+                        //Collapse todos los card-permisos
+                        $('#' + form_activo).find('.card-permisos').CardWidget('collapse');
                         break;
 
                     case 'usuarios':
@@ -84,6 +87,127 @@ function agregar(titulo = '') {
         $('#' + form_activo).find('.card-form').CardWidget('expand');
     }
 }//Fin de la funcion
+
+function modulos_tipo(id_tipo_rol)
+{
+    console.log(id_tipo_rol);
+
+    //Collapse todos los .card-permisos-modulo
+    //$('#' + form_activo).find('.card-permisos-modulo').CardWidget('collapse');
+
+    //Collapse todos los .card-permisos-submodulo
+    //$('#' + form_activo).find('.card-permisos-submodulo').CardWidget('collapse');
+
+    //Mostrar los col-permiso
+    $('#' + form_activo).find('.col-permisos-submodulo').show();
+
+    //Quitar la clase col-md-12 a col-organizacion-productos y colocar col-md-6
+    $('#' + form_activo).find('.col-organizacion-productos').removeClass('col-md-12');
+    $('#' + form_activo).find('.col-organizacion-productos').addClass('col-md-6');
+
+    //Quitar la clase col-md-12 a col-trueque-organizaciones y colocar col-md-6
+    $('#' + form_activo).find('.col-trueque-organizaciones').removeClass('col-md-12');
+    $('#' + form_activo).find('.col-trueque-organizaciones').addClass('col-md-6');
+
+    switch (id_tipo_rol) {
+        //Si el id_tipo_rol es 0, entonces se cierran todos los card-permiso del form_activo
+        case '':
+            $('#' + form_activo).find('.card-permisos').CardWidget('collapse');
+            break;
+
+        case '1':
+            //Expandir el card-permisos
+            $('#' + form_activo).find('.card-permisos').CardWidget('expand');
+
+            //Mostrar el card-permisos-organizacion y card-permiso-administracion
+            $('#' + form_activo).find('.card-permisos-organizacion').CardWidget('expand');
+            $('#' + form_activo).find('.card-permisos-administracion').CardWidget('expand');
+            
+            //Ocultar card-permiso-feria y card-permiso-trueque
+            $('#' + form_activo).find('.card-permisos-feria').CardWidget('collapse');
+            $('#' + form_activo).find('.card-permisos-trueque').CardWidget('collapse');
+
+            //Ocultar los col-adminisracion-roles y col-administracion-auditorias
+            $('#' + form_activo).find('.col-administracion-roles').hide();
+            $('#' + form_activo).find('.col-administracion-auditorias').hide();
+
+            //Ocultar col-trueque-configuracion y col-feria-configuracion
+            $('#' + form_activo).find('.col-trueque-configuracion').hide();
+            $('#' + form_activo).find('.col-feria-configuracion').hide();
+            break;
+
+        case '2':
+            //Expandir el card-permisos
+            $('#' + form_activo).find('.card-permisos').CardWidget('expand');
+
+            //Mostrar los card-permiso-trueque y card-permiso-administracion
+            $('#' + form_activo).find('.card-permisos-trueque').CardWidget('expand');
+            $('#' + form_activo).find('.card-permisos-administracion').CardWidget('expand');
+
+            //Ocultar el card-permiso-organizacion y card-permiso-feria
+            $('#' + form_activo).find('.card-permisos-organizacion').CardWidget('collapse');
+            $('#' + form_activo).find('.card-permisos-feria').CardWidget('collapse');
+
+            ///Ocultar los col-adminisracion-roles y col-administracion-auditorias
+            $('#' + form_activo).find('.col-administracion-roles').hide();
+            $('#' + form_activo).find('.col-administracion-auditorias').hide();
+
+            //Ocultar el col-feria-configuracion y col-organizacion-configuracion
+            $('#' + form_activo).find('.col-feria-configuracion').hide();
+            $('#' + form_activo).find('.col-organizacion-configuracion').hide();
+
+            //Colocar col-md-12 a col-organizacion-productos y remover col-md-6
+            $('#' + form_activo).find('.col-organizacion-productos').removeClass('col-md-6');
+            $('#' + form_activo).find('.col-organizacion-productos').addClass('col-md-12');
+            break;
+
+        case '4':
+            //Expandir el card-permisos
+            $('#' + form_activo).find('.card-permisos').CardWidget('expand');
+
+            //Mostrar el card-permiso-trueque, card-permiso-feria y card-permiso-administracion
+            $('#' + form_activo).find('.card-permisos-trueque').CardWidget('expand');
+            $('#' + form_activo).find('.card-permisos-feria').CardWidget('expand');
+            $('#' + form_activo).find('.card-permisos-administracion').CardWidget('expand');
+
+            //Ocultar el card-permiso-organizacion
+            $('#' + form_activo).find('.card-permisos-organizacion').CardWidget('collapse');
+
+            //Ocultar los col-adminisracion-roles y col-administracion-auditorias
+            $('#' + form_activo).find('.col-administracion-roles').hide();
+            $('#' + form_activo).find('.col-administracion-auditorias').hide();
+            
+            //Ocultar el col-trueque-configuracion, col-organizacion-configuracion y col-trueque-ferias_virtuales
+            $('#' + form_activo).find('.col-trueque-configuracion').hide();
+            $('#' + form_activo).find('.col-organizacion-configuracion').hide();
+            $('#' + form_activo).find('.col-trueque-ferias_virtuales').hide();
+
+            //Colocar col-md-12 a col-trueque-organizaciones y remover col-md-6
+            $('#' + form_activo).find('.col-trueque-organizaciones').removeClass('col-md-6');
+            $('#' + form_activo).find('.col-trueque-organizaciones').addClass('col-md-12');
+
+            //Colocar col-md-12 a col-organizacion-productos y remover col-md-6
+            $('#' + form_activo).find('.col-organizacion-productos').removeClass('col-md-6');
+            $('#' + form_activo).find('.col-organizacion-productos').addClass('col-md-12');
+            break;
+    
+        default:
+            //Mostrar todos los card-permiso
+            $('#' + form_activo).find('.card-permisos').CardWidget('expand');
+
+            //Expandir los card-permiso-trueque, card-permiso-feria y card-permiso-administracion y card-permiso-organizacion
+            $('#' + form_activo).find('.card-permisos-trueque').CardWidget('expand');
+            $('#' + form_activo).find('.card-permisos-feria').CardWidget('expand');
+            $('#' + form_activo).find('.card-permisos-administracion').CardWidget('expand');
+            $('#' + form_activo).find('.card-permisos-organizacion').CardWidget('expand');
+
+            //Ocultar col-trueque-configuracion y col-feria-configuracion
+            $('#' + form_activo).find('.col-trueque-configuracion').hide();
+            $('#' + form_activo).find('.col-feria-configuracion').hide();
+            break;
+    }
+
+}
 
 /**Cancelar la accion del formulario actual */
 function cancelar_accion()
@@ -178,27 +302,41 @@ function llenarFrm(objeto, titulo, nombre_form = '', ver = false) {
         var tipo_identificacion = '';
 
         $.each(objeto, function (key, valor) {
-            if (key == 'identificacion') {
-                identificacion = valor;
+            switch (key) {
+                case 'identificacion':
+                    identificacion = valor;
+                break;
+
+                case 'id_tipo_identificacion':
+                    tipo_identificacion = valor;
+
+                    //Quitar disabled al select
+                    $('#' + nombre_form).find('#' + key).prop('disabled', false);
+
+                    //Seleccionar el tipo de identificacion
+                    $('#' + nombre_form).find('#' + key).val(tipo_identificacion);
+
+                    //Quitar disabled al select
+                    $('#' + nombre_form).find('#' + key).prop('disabled', true);    
+                break;
+
+                case 'id_ubicacion':
+                    //llenarUbicacion(valor);
+                break;
+
+                case 'logo':
+                    $('#' + nombre_form).find('.logo_organizacion').attr('src', base + 'files/images/organizaciones/' + valor);
+                
+                    break;
+                default:
+                $('#' + nombre_form).find("#" + key).val(valor);
             }
-
-            else if (key == 'id_tipo_identificacion') {
-                tipo_identificacion = valor;
-            }
-
-            $('#' + nombre_form).find("#" + key).val(valor);
-
         });
 
         if (identificacion) {
             identificacion = formatear_cedula(identificacion, tipo_identificacion);
             $('#' + nombre_form).find("#identificacion").val(identificacion);
         }
-
-        $('#' + elemento_activo).find(".titulo-form").html(titulo);
-
-        //Mostrar el card-frm
-        $('#' + elemento_activo).find('.card-frm').show();
 
         if(ver)
         {
@@ -224,7 +362,13 @@ function llenarFrm(objeto, titulo, nombre_form = '', ver = false) {
 
         campos_activos(ver, nombre_form);
 
-        //Abrir el card
+        //Colocar el titulo del modulo
+        $('#' + elemento_activo).find(".titulo-form").html(titulo);
+
+        //Mostrar el card-frm que contiene el formulario
+        $('#' + elemento_activo).find('.card-frm').show();
+
+        //Abrir el card del form activo
         $('#' + form_activo).find('.card').CardWidget('expand');
     }//Fin de la validacion
 }//Fin de la funcion
@@ -251,7 +395,7 @@ function editar() {
             }
             break;
 
-        case 'seguridad':
+        case 'administracion':
             switch (submodulo_activo) {
                 case 'usuarios':
                     activar_campos_cedula(true, form_activo);
@@ -389,8 +533,7 @@ function obtener(id, objeto, ver = false) {
                 activar_campos_cedula(true, form_activo);
             }
 
-            if (objeto == 'cliente') {
-                activar_campos_cedula(true, form_activo);
+            if (objeto == 'organizacion') {
                 llenarUbicacion(response.cod_provincia, response.cod_canton, response.cod_distrito, response.id_ubicacion, ver);
             }
 

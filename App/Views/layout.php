@@ -17,7 +17,7 @@
             <div class="circle-small"></div>
             <figure>
                 <img class="circle-inner-inner img-fluid" src="<?=baseUrl('files/images/logo sin letras.png')?>"
-                    alt="Modas Laura">
+                    alt="Red de trueke">
 
                 <!-- Colocar 'cargando' abajo de la imagen -->
                 <figcaption class="text-center pt-5">
@@ -27,7 +27,7 @@
         </div>
 
         <?php 
-            echo view('base/navbar', array('modulos' => $modulos));
+            echo view('base/navbar', $nav);
         ?>
 
         <div class="content-wrapper pt-2 bg-transparent">
@@ -36,7 +36,7 @@
                     <div class="row">
                         <div class="col-md-12" id="inicio">
                             <?php
-                                echo view('inicio/dash', array('modulos'=>$modulos));
+                                echo view('inicio/dash', $data_inicio);
                             ?>
                         </div>
 
@@ -47,7 +47,7 @@
                                     $nombre_modulo = $modulo->nombre_modulo;
                             ?>
 
-                            <div class="contenedor" id="contenedor_<?=$nombre_modulo?>">
+                            <div id="contenedor_<?=$nombre_modulo?>">
                                 <?php
                                     echo view('base/modal/modulo', $modulo);
 
@@ -58,7 +58,7 @@
 
                                             //var_dump($submodulo);
 
-                                            if($modulo != 'seguridad' && $submodulo != 'auditorias')
+                                            if($modulo != 'administracion' && $submodulo != 'auditorias')
                                                 echo view('base/modal/submodulo', $submodulo);
                                         endforeach;
                                 ?>
@@ -68,7 +68,18 @@
                         </div>
 
 
-                        <div class="col-md-12 contenedor" id="contenedor">
+                        <div class="col-md-12 contenedor pt-2 pb-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-body bg-dark">
+                                        <?= view('base/header') ?>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12" id="contenedor">
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -76,7 +87,12 @@
         </div>
 
         <!-- Perfil del usuario que ha iniciado sesion -->
-        <?= view('base/persona/perfil', array('perfil'=> getPerfil()))?>
+        <?php 
+            echo view('base/persona/perfil', array('perfil'=> getPerfil()));
+
+            if(!is_login())
+                echo view('base/modal/login');
+            ?>
 
         <?php echo view('base/footer')?>
     </div>

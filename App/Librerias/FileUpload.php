@@ -4,7 +4,7 @@ namespace App\Librerias;
 
 class FileUpload
 {
-    private $ruta = "F:\\server\\htdocs\\universidad\\tcu\\mercadito\\Mercadito\\public\\files\\";
+    private $ruta = '';
     private $file;
     private $name;
     private $tmp_name;
@@ -23,16 +23,15 @@ class FileUpload
         $this->size = $file['size'];
     }
 
-    public function subir_imagen($nombre_imagen = '', $ruta)
+    /**Subir una imagen al servidor */
+    public function subir_imagen($nombre_imagen = '', $carpeta = '')
     {
-        $target_dir = $this->ruta . "\\images\\" . $ruta . "\\";
+        $target_dir = "images\\" . $carpeta . "\\";
 
         //Obtener la extension del archivo
         $extension = pathinfo($this->name, PATHINFO_EXTENSION);
 
         $target_name = $nombre_imagen . '.' . $extension;
-
-        $this->name = $target_name;
 
         $target_file = $target_dir . $target_name;
 
@@ -41,27 +40,14 @@ class FileUpload
         {
             $this->error = 'El archivo no es una imagen';
             return false;
-        }
+        }//Fin de la validacion de imagen
 
-        // Check file size
+        //Validar el tamaño del archivo
         if ($this->size > $this->max_size) {
             $this->error = 'El archivo es demasiado grande';
             return false;
-        }
-        // Allow certain file formats
-        if ($extension != "jpg" && $extension != "png" && $extension != "jpeg"
-            && $extension != "gif" && $extension != "JPG" && $extension != "PNG"
-            && $extension != "JPEG" && $extension != "GIF") {
-            $this->error = 'Solo se permiten archivos JPG, JPEG, PNG y GIF';
-            return false;
-        }
+        }//Fin de la validacion de tamaño
 
-        //Si el archivo existe, reemplazarlo
-		if(file_exists($target_file))
-        {
-            unlink($target_file);
-        }
-        
         //Mover el archivo
         if ($this->move($target_file)) {
             return true;
@@ -71,6 +57,7 @@ class FileUpload
         }
     }
 
+    /**Obtener el error que se genero al guardar el archivo */
     public function getError()
     {
         return $this->error;
@@ -99,10 +86,23 @@ class FileUpload
         return is_uploaded_file($this->tmp_name);
     }
 
+    /**Subir el archivo al servidor
+     * @param $path Ruta donde se guardará el archivo
+     */
     public function move($path)
     {
-        return move_uploaded_file($this->tmp_name, $this->ruta . $path);
-    }
+        $ruta = location($path);
+
+        //Si el archivo existe, reemplazarlo
+		if(file_exists($ruta))
+        {
+            unlink($ruta);
+        }
+
+        $this->name = $ruta;
+
+        return move_uploaded_file($this->tmp_name, $ruta);
+    }//Fin de la funcion para subir el archivo
 
     public function getExtension()
     {

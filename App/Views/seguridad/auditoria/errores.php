@@ -5,7 +5,7 @@
     </div>
 
     <div class="card-body scroll_vertical">
-        <table class="table table-bordered table-hover text-center" id="listado_seguridad_errores">
+        <table class="table table-bordered table-hover text-center" id="listado_administracion_errores">
             <thead>
                 <tr>
                     <th>Fecha del error</th>

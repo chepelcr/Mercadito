@@ -1,15 +1,14 @@
-<!-- Permisos de empresa -->
-<div class="card">
+<!-- Permisos -->
+<div class="card card-permisos-modulo card-permisos-<?=$modulo->nombre_modulo?>">
     <div class="card-header">
         <h4 class="card-title">
-            <!-- Icono -->
-            <i class="fas <?= $modulo->icono?>"></i> <?= ucfirst($modulo->nombre_modulo)?>
+            <?= ucfirst(str_replace('_', ' ',$modulo->nombre_modulo))?>
         </h4>
 
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
                 title="Collapse">
-                <i class="fas fa-minus"></i>
+                <i class="fa-solid <?= $modulo->icono?>"></i>
             </button>
         </div>
     </div>
@@ -23,28 +22,42 @@
                 {
                     $nom_submodulo = $submodulo->nombre_submodulo;
 
-                    switch ($nom_modulo) {
-                        case 'participante':
-                            echo '<div class="col-md-6">';
-                            break;
-
-                        case 'seguridad':
-                            echo '<div class="col-md-4">';
-                            break;
-
-                        case 'trueque':
-                            echo '<div class="col-md-6">';
-                            break;
+                    if($nom_submodulo == 'configuracion' && $nom_modulo != 'organizacion' || $nom_submodulo == 'usuarios')
+                    {
+                        echo '<div class="col-md-12';
                     }
+
+                    else
+                    {
+                        switch ($nom_modulo) {
+                            case 'organizacion':
+                                echo '<div class="col-md-6';
+                                break;
+    
+                            case 'administracion':
+                                echo '<div class="col-md-6';
+                                break;
+    
+                            case 'trueque':
+                                echo '<div class="col-md-6';
+                                break;
+    
+                            default:
+                                echo '<div class="col-md-4';
+                                break;
+                        }
+                    }
+
+                    echo ' col-permisos-submodulo col-'.$nom_modulo.'-'.$nom_submodulo.'">';
             ?>
-                <div class="card">
+                <div class="card card-permisos-<?=$nom_modulo?>-<?=$nom_submodulo?> card-permisos-submodulo">
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
                             <h5 class="card-title">
-                                <?= ucfirst($submodulo->nombre_submodulo)?>
+                                <?= ucfirst(str_replace('_', ' ', $submodulo->nombre_submodulo))?>
                             </h5>
 
-                            <i class="fas <?= $submodulo->icono?>"></i>
+                            <i class="fa-solid <?= $submodulo->icono?>"></i>
                         </div>
                     </div>
                     <div class="card-body">
@@ -61,7 +74,7 @@
                             class="btn btn-secondary inp btn-permiso btn_<?='permiso_'.$modulo->nombre_modulo.'_'.$submodulo->nombre_submodulo.'_'.$permiso->nombre_accion; ?>" 
                             data-toggle="tooltip" title="<?= ucfirst($permiso->nombre_accion)?>"
                             onclick="marcar_permiso('<?=$modulo->nombre_modulo?>', '<?=$submodulo->nombre_submodulo?>', '<?=$permiso->nombre_accion?>')">
-                                <i class="fas <?= $permiso->icono?>"></i>
+                                <i class="fa-solid <?= $permiso->icono?>"></i>
                             </button>
 
                             <div class="form-group form-check" hidden>

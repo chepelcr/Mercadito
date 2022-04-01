@@ -60,9 +60,9 @@
                 </div>
             </div>
 
+            <!-- Nombre completo -->
             <div class="col-md-8">
                 <div class="form-group">
-                    <!-- Nombre del cliente -->
                     <label class="text-left razon">Nombre completo</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -74,22 +74,68 @@
                 </div>
             </div>
 
+            <!-- Genero -->
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="text-left">Pais</label>
+                    <label for="genero">Genero</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                            <span class="input-group-text">
+                                <i class="fas fa-venus-mars"></i>
+                            </span>
                         </div>
-                        <select id="cod_pais" name="cod_pais" class="form-control inp cod_pais">
-                            <option value="">Seleccionar</option>
-                            <?php foreach ($codigos as $key => $codigo): ?>
-                            <option value="<?=$codigo->cod_pais?>"
-                                <?php if(isset($cod_pais) && $cod_pais == $codigo->cod_pais) echo "selected"?>>
-                                <?=$codigo->nombre?>
+                        <select required class="form-select inp" id="genero" name="genero">
+                            <option value="">Seleccione</option>
+                            <option value="F" <?php if(isset($sexo) && $sexo == 'F') echo 'selected'; ?>>
+                                Femenino
                             </option>
-                            <?php endforeach ?>
+                            <option value="M" <?php if(isset($sexo) && $sexo == 'M') echo 'selected'; ?>>
+                                Masculino
+                            </option>
+                            <option value="O" <?php if(isset($sexo) && $sexo == 'O') echo 'selected'; ?>>
+                                Otro
                         </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nacionalidad -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nacionalidad">Nacionalidad</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fas fa-globe-americas"></i>
+                            </span>
+                        </div>
+                        <select required class="form-select inp" id="cod_pais" name="cod_pais">
+                            <option value="">Seleccionar</option>
+                            <?php
+                                    foreach ($codigos as $nacionalidad): ?>
+                            <option value="<?php echo $nacionalidad->cod_pais; ?>"
+                                <?php if(isset($cod_pais) && $cod_pais == $nacionalidad->cod_pais) echo 'selected'; ?>>
+                                <?php echo $nacionalidad->nombre; ?>
+                            </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fecha de nacimiento -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="fecha_nacimiento">Fecha de nacimiento</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                        <input required type="date" class="form-control inp perfil" id="fecha_nacimiento"
+                            name="fecha_nacimiento" placeholder="Fecha de nacimiento" required
+                            value="<?php if(isset($fecha_nacimiento)) echo $fecha_nacimiento; ?>">
                     </div>
                 </div>
             </div>

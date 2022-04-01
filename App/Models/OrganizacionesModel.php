@@ -19,9 +19,14 @@ class OrganizacionesModel extends Model
         'cod_pais',
         'correo',
         'id_ubicacion',
-        'otras_senas',
+        'id_tipo_organizacion',
+        'otras_senias',
         'whatsapp',
-        'id_region',
+        'url_facebook',
+        'url_instagram',
+        'url_youtube',
+        'mision',
+        'vision',
         'estado',
         'fecha_creacion',
         'fecha_modificacion',
@@ -39,21 +44,30 @@ class OrganizacionesModel extends Model
         'canton',
         'distrito',
         'barrio',
+        'tipo_organizacion',
     ];
 
     protected $auditorias = true;
     protected $autoIncrement = true;
-
-    /**Obtener un cliente por numero de identificacion */
-    public function getByIdentificacion($identificacion)
+    
+    public function obtener($id = 'all')
     {
-        $this->where('identificacion', $identificacion);
+        switch ($id) {
+            case 'organizacion':
+                return $this->getById(getSession('id_organizacion'));
+                break;
 
-        return $this->fila();
-    }
+            case 'ferias':
+                return $this->where('id_tipo_organizacion', 4)->getAll();
+                break;
 
-    function getEmpresa()
-    {
-        return $this->getById(getSession('id_empresa'));
+            case 'all':
+                return $this->getAll();
+                break;
+            
+            default:
+                return $this->getById($id);
+                break;
+        }
     }
 }//Fin de la clase

@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-<?=$nombre_modulo.'-'.$nombre_submodulo?>" tabindex="-1" role="dialog"
+<div class="modal fade modal-submodulo" id="modal-<?=$nombre_modulo.'-'.$nombre_submodulo?>" tabindex="-1" role="dialog"
     aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <!-- Contenido del modal -->

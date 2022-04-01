@@ -7,7 +7,7 @@ use App\Models\UsuariosModel;
 	/** Validar si el usuario ha iniciado sesion */
     function is_login()
     {
-		return getSession();
+		return getSession('login');
 		//return true;
     }//Fin de la validacion para el login
 

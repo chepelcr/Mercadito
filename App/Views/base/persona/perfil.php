@@ -10,8 +10,8 @@
                     <i class="fas fa-user-circle"></i>
                     Perfil de usuario
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="btn bg-transparent text-white" data-bs-dismiss="modal" aria-label="Cerrar">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
 
@@ -31,25 +31,30 @@
                     <div class="col-md-12">
                         <div id="panel_guardar" class="d-flex justify-content-around">
                             <!-- Grupo de botones -->
-                            <button type="button" onclick="guardar_perfil()" disabled class="btn btn-grd-prf btn-primary w-75">
-                                </i> Guardar
+                            <button type="button" onclick="guardar_perfil()" disabled class="btn btn-grd-prf btn-primary w-75" title="Guardar" data-toggle="tooltip">
+                                </i>
                             </button>
 
                             <!-- Boton para Cancelar -->
-                            <button type="button" onclick="cancelar_perfil()" disabled class="btn btn-cnl-prf btn-danger w-20">
-                                <i class="fa fa-times"></i> Cancelar
+                            <button type="button" onclick="cancelar_perfil()" disabled class="btn btn-cnl-prf btn-danger w-20" data-toggle="tooltip" title="Cancelar">
+                                <i class="fa fa-times"></i>
                             </button>
                         </div>
 
                         <div id="panel_perfil" class="d-flex justify-content-around">
-                            <button class="btn btn-info w-25 btn-edt-prf" type="button" disabled>Editar perfil</button>
+                            <button class="btn btn-warning w-25" data-toggle="tooltip" type="button" title="Editar perfil">
+                                <i class="fas fa-user-edit"></i>
+                            </button>
 
-                            <!-- Cambiar foto de perfil -->
-                            <button class="btn btn-warning w-25" type="button" disabled>Cambiar foto de perfil</button>
+                            <!-- Ver organizacion -->
+                            <button onclick="ver_organizacion();" type="button" class="btn btn-info w-25"
+                                data-toggle="tooltip" title="Ver organización">
+                                <i class="fas fa-building"></i>
+                            </button>
 
-                            <button class="btn btn-danger w-25" type="button" disabled data-toggle="modal"
-                                data-target="#modalContrasenia">Cambiar
-                                contraseña</button>
+                            <button class="btn btn-danger w-25" type="button"data-toggle="tooltip" title="Cambiar contraseña">
+                                <i class="fas fa-key"></i>
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -86,6 +86,11 @@
             $this->select('id_permiso')->where('id_rol', $id_rol)->where('id_modulo', $id_modulo)->where('id_submodulo', $id_submodulo)->where('id_accion', $id_accion);
             $permiso = $this->fila();
 
+            if(!$permiso)
+            {
+                return false;
+            }
+
             return $permiso->id_permiso;
         }//Fin de la funcion
     }//Fin de la clase
